@@ -1,0 +1,96 @@
+.chart-container {
+    padding: 16px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+      max-height: 300px;
+    }
+    
+    .no-data {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      
+      .no-data-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        
+        mat-icon {
+          width: 48px;
+          height: 48px;
+          font-size: 48px;
+          opacity: 0.5;
+        }
+      }
+      
+      p {
+        font-size: 16px;
+        text-align: center;
+      }
+    }
+    
+    .chart-metrics {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+      padding: 16px 0;
+      border-top: 1px solid #eee;
+      
+      .metric {
+        text-align: center;
+        flex: 1;
+        
+        .metric-value {
+          font-size: 20px;
+          font-weight: 500;
+          margin-bottom: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          
+          &.trend-up {
+            color: #4caf50;
+          }
+          
+          &.trend-down {
+            color: #f44336;
+          }
+          
+          mat-icon {
+            margin-left: 4px;
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+        
+        .metric-label {
+          font-size: 12px;
+          color: #666;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .chart-metrics {
+      flex-wrap: wrap;
+      
+      .metric {
+        flex: 1 0 50%;
+        margin-bottom: 16px;
+      }
+    }
+  }

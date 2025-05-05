@@ -1,0 +1,26 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 64px);
+    
+    mat-card {
+      width: 400px;
+      max-width: 90%;
+      
+      mat-card-header {
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      
+      .full-width {
+        width: 100%;
+        margin-bottom: 15px;
+      }
+      
+      .button-spinner {
+        display: inline-block;
+        margin-right: 10px;
+      }
+    }
+  }

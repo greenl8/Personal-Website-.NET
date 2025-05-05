@@ -1,0 +1,65 @@
+<div class="pagination-container" *ngIf="totalPages > 0">
+    <!-- Page size selector -->
+    <div class="page-size-selector" *ngIf="showPageSizeSelector">
+      <span>Items per page:</span>
+      <mat-form-field appearance="outline">
+        <mat-select [value]="pageSize" (selectionChange)="onPageSizeChange($event.value)">
+          <mat-option *ngFor="let size of pageSizeOptions" [value]="size">
+            {{size}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  
+    <!-- Item range display -->
+    <div class="item-range">
+      {{ getDisplayedItemRange().start }}-{{ getDisplayedItemRange().end }} of {{ totalCount }}
+    </div>
+  
+    <!-- Pagination controls -->
+    <div class="pagination-controls">
+      <!-- First page button -->
+      <button mat-icon-button 
+              *ngIf="showFirstLastButtons"
+              [disabled]="!hasPreviousPage()" 
+              (click)="goToPage(1)" 
+              aria-label="First page">
+        <mat-icon>first_page</mat-icon>
+      </button>
+      
+      <!-- Previous page button -->
+      <button mat-icon-button 
+              [disabled]="!hasPreviousPage()" 
+              (click)="goToPage(currentPage - 1)" 
+              aria-label="Previous page">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      
+      <!-- Page number buttons -->
+      <div class="page-numbers">
+        <button mat-flat-button 
+                *ngFor="let page of pages" 
+                [color]="page === currentPage ? 'primary' : ''" 
+                (click)="goToPage(page)">
+          {{ page }}
+        </button>
+      </div>
+      
+      <!-- Next page button -->
+      <button mat-icon-button 
+              [disabled]="!hasNextPage()" 
+              (click)="goToPage(currentPage + 1)" 
+              aria-label="Next page">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      
+      <!-- Last page button -->
+      <button mat-icon-button 
+              *ngIf="showFirstLastButtons"
+              [disabled]="!hasNextPage()" 
+              (click)="goToPage(totalPages)" 
+              aria-label="Last page">
+        <mat-icon>last_page</mat-icon>
+      </button>
+    </div>
+  </div>

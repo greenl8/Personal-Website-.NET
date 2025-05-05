@@ -1,0 +1,165 @@
+.post-edit-container {
+    padding: 20px;
+    
+    .header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      
+      h1 {
+        margin: 0;
+      }
+      
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+      }
+    }
+    
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      padding: 50px 0;
+    }
+    
+    .preview-container {
+      mat-card {
+        margin-bottom: 20px;
+        
+        mat-card-title {
+          font-size: 2rem;
+          margin-bottom: 10px;
+        }
+        
+        img {
+          max-width: 100%;
+          max-height: 400px;
+          object-fit: cover;
+        }
+        
+        .post-content {
+          font-size: 1.1rem;
+          line-height: 1.6;
+          margin-bottom: 20px;
+          
+          ::ng-deep {
+            img {
+              max-width: 100%;
+              height: auto;
+            }
+            
+            h1, h2, h3, h4, h5, h6 {
+              margin-top: 1.5em;
+              margin-bottom: 0.5em;
+            }
+            
+            p {
+              margin-bottom: 1em;
+            }
+            
+            blockquote {
+              border-left: 4px solid #ccc;
+              padding-left: 15px;
+              margin-left: 0;
+              color: #666;
+            }
+            
+            pre {
+              background-color: #f5f5f5;
+              padding: 15px;
+              border-radius: 4px;
+              overflow-x: auto;
+            }
+          }
+        }
+        
+        .post-tags {
+          margin-top: 20px;
+        }
+      }
+    }
+    
+    .edit-form {
+      .form-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+        
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
+        }
+        
+        .main-content, .sidebar {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+        
+        .full-width {
+          width: 100%;
+        }
+        
+        .slug-container {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 20px;
+          
+          .slug-field {
+            flex: 1;
+          }
+        }
+        
+        .editor-container {
+          margin-bottom: 20px;
+          
+          label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: rgba(0, 0, 0, 0.6);
+          }
+          
+          app-rich-text-editor {
+            display: block;
+            min-height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+          }
+          
+          mat-error {
+            font-size: 0.75rem;
+            margin-top: 5px;
+            color: #f44336;
+          }
+        }
+        
+        .featured-image-container {
+          .image-preview {
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            
+            img {
+              width: 100%;
+              max-height: 200px;
+              object-fit: cover;
+            }
+          }
+          
+          button {
+            margin-bottom: 10px;
+            width: 100%;
+          }
+        }
+        
+        .publish-actions {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 15px;
+        }
+      }
+    }
+  }

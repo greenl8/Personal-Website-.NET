@@ -1,0 +1,41 @@
+<div class="chart-container">
+  <div *ngIf="!chartData || chartData.length === 0" class="no-data">
+    <div class="no-data-icon">
+      <mat-icon>bar_chart</mat-icon>
+    </div>
+    <p>No data available for the selected time period</p>
+  </div>
+  
+  <canvas id="trafficChart" width="800" height="300"></canvas>
+  
+  <div class="chart-metrics" *ngIf="chartValues.length > 0">
+    <div class="metric">
+      <div class="metric-value">
+        {{ chartValues.length > 0 ? chartValues[chartValues.length - 1] : 0 }}
+      </div>
+      <div class="metric-label">Current</div>
+    </div>
+    
+    <div class="metric">
+      <div class="metric-value">
+        {{ averageValue }}
+      </div>
+      <div class="metric-label">Average</div>
+    </div>
+    
+    <div class="metric">
+      <div class="metric-value">
+        {{ maxChartValue }}
+      </div>
+      <div class="metric-label">Peak</div>
+    </div>
+    
+    <div class="metric">
+      <div class="metric-value" [class.trend-up]="isTrendingUp()" [class.trend-down]="!isTrendingUp()">
+        {{ calculateTrend() }}%
+        <mat-icon>{{ isTrendingUp() ? 'trending_up' : 'trending_down' }}</mat-icon>
+      </div>
+      <div class="metric-label">Trend</div>
+    </div>
+  </div>
+</div>

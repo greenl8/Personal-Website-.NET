@@ -1,0 +1,23 @@
+h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  
+  mat-dialog-content {
+    padding-top: 10px;
+    min-width: 300px;
+    
+    p {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  }
+  
+  mat-dialog-actions {
+    padding-bottom: 15px;
+    
+    button {
+      margin-left: 8px;
+    }
+  }

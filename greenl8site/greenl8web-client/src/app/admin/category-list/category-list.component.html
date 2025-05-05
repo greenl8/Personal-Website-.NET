@@ -1,0 +1,87 @@
+<div class="category-list-container">
+    <div class="header-actions">
+      <h1>Categories</h1>
+    </div>
+    
+    <div class="content-container">
+      <div class="form-container">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ isEditing ? 'Edit Category' : 'Add New Category' }}</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+                <mat-error *ngIf="categoryForm.get('name').hasError('required')">
+                  Name is required
+                </mat-error>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Slug</mat-label>
+                <input matInput formControlName="slug" placeholder="Leave empty to generate from name">
+              </mat-form-field>
+              
+              <div class="form-actions">
+                <button type="button" mat-button *ngIf="isEditing" (click)="resetForm()">
+                  Cancel
+                </button>
+                <button type="submit" mat-raised-button color="primary" [disabled]="categoryForm.invalid">
+                  {{ isEditing ? 'Update' : 'Add' }} Category
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      
+      <div class="list-container">
+        <mat-card>
+          <mat-card-content>
+            <div class="loading-container" *ngIf="loading">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+            
+            <div class="table-container" *ngIf="!loading">
+              <table mat-table [dataSource]="categories" class="mat-elevation-z2">
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef>Name</th>
+                  <td mat-cell *matCellDef="let category">{{ category.name }}</td>
+                </ng-container>
+                
+                <!-- Slug Column -->
+                <ng-container matColumnDef="slug">
+                  <th mat-header-cell *matHeaderCellDef>Slug</th>
+                  <td mat-cell *matCellDef="let category">{{ category.slug }}</td>
+                </ng-container>
+                
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let category">
+                    <button mat-icon-button (click)="editCategory(category)" matTooltip="Edit">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="deleteCategory(category)" matTooltip="Delete">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              
+              <div *ngIf="categories.length === 0" class="no-data">
+                <p>No categories found. Add a new category to get started.</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>

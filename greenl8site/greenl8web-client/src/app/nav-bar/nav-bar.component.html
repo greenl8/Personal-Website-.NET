@@ -1,0 +1,37 @@
+<mat-toolbar color="primary">
+    <a mat-button routerLink="/" class="home-button">
+      <span class="site-name">Your Site Name</span>
+    </a>
+    
+    <span class="spacer"></span>
+    
+    <!-- Public navigation -->
+    <button mat-button [matMenuTriggerFor]="pagesMenu">Pages</button>
+    <mat-menu #pagesMenu="matMenu">
+      <button mat-menu-item routerLink="/about">About</button>
+      <button mat-menu-item routerLink="/contact">Contact</button>
+    </mat-menu>
+    
+    <!-- User controls -->
+    <ng-container *ngIf="(currentUser$ | async) === null">
+      <button mat-button routerLink="/login">Login</button>
+    </ng-container>
+    
+    <ng-container *ngIf="(currentUser$ | async) as user">
+      <button mat-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+        {{ user.username }}
+      </button>
+      
+      <mat-menu #userMenu="matMenu">
+        <button *ngIf="isAdmin()" mat-menu-item routerLink="/admin">
+          <mat-icon>dashboard</mat-icon>
+          Admin Dashboard
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          Logout
+        </button>
+      </mat-menu>
+    </ng-container>
+  </mat-toolbar>

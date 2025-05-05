@@ -1,0 +1,389 @@
+<div class="admin-container" [class.sidenav-collapsed]="!sidenavOpen">
+  <!-- Sidenav -->
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav mode="side" [opened]="sidenavOpen" class="admin-sidenav" disableClose="true">
+      <!-- Site logo and name -->
+      <div class="logo-container">
+        <img src="assets/images/logo.svg" alt="Site logo" class="site-logo">
+        <span class="site-name" *ngIf="sidenavOpen">Your CMS</span>
+      </div>
+      
+      <!-- Navigation items -->
+      <mat-nav-list>
+        <a mat-list-item routerLink="/admin" routerLinkActive="active">
+          <mat-icon matListIcon>dashboard</mat-icon>
+          <span *ngIf="sidenavOpen">Dashboard</span>
+        </a>
+        
+        <h3 matSubheader *ngIf="sidenavOpen">Content</h3>
+        
+        <a mat-list-item routerLink="/admin/posts" routerLinkActive="active">
+          <mat-icon matListIcon>article</mat-icon>
+          <span *ngIf="sidenavOpen">Posts</span>
+          <span matBadge="{{dashboardSummary?.draftCount || 0}}" matBadgeSize="small" matBadgeColor="accent" matBadgeOverlap="false" *ngIf="sidenavOpen && dashboardSummary?.draftCount > 0"></span>
+        </a>
+        
+        <a mat-list-item routerLink="/admin/pages" routerLinkActive="active">
+          <mat-icon matListIcon>description</mat-icon>
+          <span *ngIf="sidenavOpen">Pages</span>
+        </a>
+        
+        <a mat-list-item routerLink="/admin/comments" routerLinkActive="active">
+          <mat-icon matListIcon [matBadge]="dashboardSummary?.pendingCommentCount || 0" [matBadgeHidden]="!dashboardSummary?.pendingCommentCount" matBadgeColor="warn">comment</mat-icon>
+          <span *ngIf="sidenavOpen">Comments</span>
+        </a>
+        
+        <a mat-list-item routerLink="/admin/media" routerLinkActive="active">
+          <mat-icon matListIcon>perm_media</mat-icon>
+          <span *ngIf="sidenavOpen">Media</span>
+        </a>
+        
+        <h3 matSubheader *ngIf="sidenavOpen">Taxonomy</h3>
+        
+        <a mat-list-item routerLink="/admin/categories" routerLinkActive="active">
+          <mat-icon matListIcon>category</mat-icon>
+          <span *ngIf="sidenavOpen">Categories</span>
+        </a>
+        
+        <a mat-list-item routerLink="/admin/tags" routerLinkActive="active">
+          <mat-icon matListIcon>local_offer</mat-icon>
+          <span *ngIf="sidenavOpen">Tags</span>
+        </a>
+        
+        <h3 matSubheader *ngIf="sidenavOpen">Settings</h3>
+        
+        <a mat-list-item routerLink="/admin/users" routerLinkActive="active">
+          <mat-icon matListIcon>people</mat-icon>
+          <span *ngIf="sidenavOpen">Users</span>
+        </a>
+        
+        <a mat-list-item routerLink="/admin/settings" routerLinkActive="active">
+          <mat-icon matListIcon>settings</mat-icon>
+          <span *ngIf="sidenavOpen">Settings</span>
+        </a>
+      </mat-nav-list>
+      
+      <!-- Collapse/expand button -->
+      <div class="sidenav-footer">
+        <button mat-icon-button (click)="toggleSidenav()" class="collapse-btn">
+          <mat-icon>{{ sidenavOpen ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+        </button>
+      </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <!-- Top toolbar -->
+      <mat-toolbar color="primary" class="admin-toolbar">
+        <span class="page-title">Dashboard</span>
+        
+        <span class="spacer"></span>
+        
+        <div class="toolbar-actions">
+          <!-- Refresh button -->
+          <button mat-icon-button (click)="refreshData()" matTooltip="Refresh data">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          
+          <!-- Add new content button -->
+          <button mat-icon-button [matMenuTriggerFor]="addMenu" matTooltip="Add new content">
+            <mat-icon>add</mat-icon>
+          </button>
+          <mat-menu #addMenu="matMenu">
+            <a mat-menu-item routerLink="/admin/posts/new">
+              <mat-icon>post_add</mat-icon>
+              <span>New Post</span>
+            </a>
+            <a mat-menu-item routerLink="/admin/pages/new">
+              <mat-icon>note_add</mat-icon>
+              <span>New Page</span>
+            </a>
+            <a mat-menu-item routerLink="/admin/media">
+              <mat-icon>add_photo_alternate</mat-icon>
+              <span>Add Media</span>
+            </a>
+          </mat-menu>
+          
+          <!-- View site button -->
+          <a mat-icon-button href="/" target="_blank" matTooltip="View site">
+            <mat-icon>public</mat-icon>
+          </a>
+          
+          <!-- User menu -->
+          <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-button" matTooltip="User menu">
+            <div class="user-avatar">
+              <span>{{ currentUser?.username?.charAt(0).toUpperCase() }}</span>
+            </div>
+          </button>
+          <mat-menu #userMenu="matMenu">
+            <div class="user-info">
+              <div class="user-avatar">
+                <span>{{ currentUser?.username?.charAt(0).toUpperCase() }}</span>
+              </div>
+              <div class="user-details">
+                <div class="user-name">{{ currentUser?.username }}</div>
+                <div class="user-email">{{ currentUser?.email }}</div>
+                <div class="user-role">{{ currentUser?.role }}</div>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <a mat-menu-item routerLink="/admin/profile">
+              <mat-icon>account_circle</mat-icon>
+              <span>Your Profile</span>
+            </a>
+            <button mat-menu-item (click)="authService.logout()">
+              <mat-icon>logout</mat-icon>
+              <span>Sign out</span>
+            </button>
+          </mat-menu>
+        </div>
+      </mat-toolbar>
+      
+      <!-- Loading indicator -->
+      <div *ngIf="loading" class="loading-overlay">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+      
+      <!-- Error message -->
+      <div *ngIf="error && !loading" class="error-container">
+        <mat-card>
+          <mat-card-content>
+            <mat-icon>error_outline</mat-icon>
+            <h3>Error Loading Dashboard</h3>
+            <p>There was a problem loading the dashboard data. Please try again.</p>
+            <button mat-raised-button color="primary" (click)="refreshData()">Retry</button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      
+      <!-- Dashboard content -->
+      <div class="dashboard-content" *ngIf="!loading && !error">
+        <!-- Welcome card -->
+        <div class="welcome-card">
+          <mat-card>
+            <mat-card-content>
+              <div class="welcome-message">
+                <h2>Welcome back, {{ currentUser?.username }}!</h2>
+                <p>Here's what's happening on your site today.</p>
+              </div>
+              <div class="date-time">
+                <div class="current-date">{{ currentDate | date:'fullDate' }}</div>
+                <div class="last-login" *ngIf="currentUser?.lastLogin">Last login: {{ currentUser.lastLogin | date:'medium' }}</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        
+        <!-- Stats cards -->
+        <div class="stats-cards">
+          <mat-card class="stat-card" matRipple>
+            <div class="stat-icon posts-icon">
+              <mat-icon>article</mat-icon>
+            </div>
+            <div class="stat-details">
+              <div class="stat-value">{{ formatNumber(dashboardSummary?.postCount || 0) }}</div>
+              <div class="stat-label">Posts</div>
+              <div class="stat-secondary">{{ dashboardSummary?.draftCount || 0 }} drafts</div>
+            </div>
+          </mat-card>
+          
+          <mat-card class="stat-card" matRipple>
+            <div class="stat-icon comments-icon">
+              <mat-icon>comment</mat-icon>
+            </div>
+            <div class="stat-details">
+              <div class="stat-value">{{ formatNumber(dashboardSummary?.commentCount || 0) }}</div>
+              <div class="stat-label">Comments</div>
+              <div class="stat-secondary">{{ dashboardSummary?.pendingCommentCount || 0 }} pending</div>
+            </div>
+          </mat-card>
+          
+          <mat-card class="stat-card" matRipple>
+            <div class="stat-icon users-icon">
+              <mat-icon>group</mat-icon>
+            </div>
+            <div class="stat-details">
+              <div class="stat-value">{{ formatNumber(dashboardSummary?.userCount || 0) }}</div>
+              <div class="stat-label">Users</div>
+              <div class="stat-secondary">{{ dashboardSummary?.newUserCount || 0 }} new</div>
+            </div>
+          </mat-card>
+          
+          <mat-card class="stat-card" matRipple>
+            <div class="stat-icon views-icon">
+              <mat-icon>visibility</mat-icon>
+            </div>
+            <div class="stat-details">
+              <div class="stat-value">{{ formatNumber(dashboardSummary?.viewCount || 0) }}</div>
+              <div class="stat-label">Views</div>
+              <div class="stat-secondary">Today</div>
+            </div>
+          </mat-card>
+        </div>
+        
+        <!-- Charts -->
+        <div class="dashboard-charts">
+          <mat-card class="chart-card">
+            <mat-card-header>
+              <mat-card-title>Site Traffic</mat-card-title>
+              <div class="chart-actions">
+                <button mat-button [matMenuTriggerFor]="periodMenu">
+                  {{ currentPeriodLabel }}
+                  <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #periodMenu="matMenu">
+                  <button mat-menu-item *ngFor="let period of timePeriods" 
+                          (click)="onTimePeriodChange(period.value)">
+                    {{ period.label }}
+                  </button>
+                </mat-menu>
+              </div>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <app-dashboard-chart 
+                [chartData]="dashboardSummary?.trafficData"
+                [period]="selectedTimePeriod">
+              </app-dashboard-chart>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        
+        <!-- Activity and Quick Actions Section -->
+        <div class="activity-actions-container">
+          <!-- Recent Activity -->
+          <div class="recent-activity-section">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Recent Activity</mat-card-title>
+              </mat-card-header>
+              
+              <mat-card-content>
+                <app-recent-activity [activities]="recentActivities"></app-recent-activity>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          
+          <!-- Quick Actions -->
+          <div class="quick-actions-section">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Quick Actions</mat-card-title>
+              </mat-card-header>
+              
+              <mat-card-content>
+                <app-quick-actions></app-quick-actions>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        
+        <!-- Recent content section -->
+        <div class="recent-content-section">
+          <!-- Draft posts -->
+          <mat-card class="recent-drafts-card">
+            <mat-card-header>
+              <mat-card-title>Recent Drafts</mat-card-title>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <div class="no-items" *ngIf="latestDrafts.length === 0">
+                <mat-icon>edit_note</mat-icon>
+                <p>No draft posts</p>
+              </div>
+              
+              <mat-nav-list *ngIf="latestDrafts.length > 0">
+                <a mat-list-item *ngFor="let draft of latestDrafts" [routerLink]="['/admin/posts/edit', draft.id]">
+                  <mat-icon matListIcon>edit</mat-icon>
+                  <div matLine>{{ draft.title }}</div>
+                  <div matLine class="item-meta">Last edited {{ draft.updatedAt | date }}</div>
+                </a>
+              </mat-nav-list>
+              
+              <div class="view-all-link" *ngIf="latestDrafts.length > 0">
+                <a mat-button color="primary" routerLink="/admin/posts">View All Posts</a>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          
+          <!-- Recent comments -->
+          <mat-card class="recent-comments-card">
+            <mat-card-header>
+              <mat-card-title>Recent Comments</mat-card-title>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <div class="no-items" *ngIf="latestComments.length === 0">
+                <mat-icon>forum</mat-icon>
+                <p>No recent comments</p>
+              </div>
+              
+              <mat-nav-list *ngIf="latestComments.length > 0">
+                <a mat-list-item *ngFor="let comment of latestComments" [routerLink]="['/admin/comments', comment.id]">
+                  <mat-icon matListIcon>comment</mat-icon>
+                  <div matLine>{{ comment.author }}</div>
+                  <div matLine class="item-meta">
+                    <span class="comment-excerpt">{{ comment.content | slice:0:60 }}{{ comment.content.length > 60 ? '...' : '' }}</span>
+                  </div>
+                  <div matLine class="item-meta">{{ comment.createdAt | date }}</div>
+                  <mat-icon *ngIf="comment.status === 'pending'" color="warn">pending</mat-icon>
+                </a>
+              </mat-nav-list>
+              
+              <div class="view-all-link" *ngIf="latestComments.length > 0">
+                <a mat-button color="primary" routerLink="/admin/comments">View All Comments</a>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        
+        <!-- System status -->
+        <div class="system-status-section" *ngIf="systemStatus">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>System Status</mat-card-title>
+            </mat-card-header>
+            
+            <mat-card-content>
+              <div class="status-grid">
+                <div class="status-item">
+                  <div class="status-label">Server Load</div>
+                  <div class="status-value" [ngClass]="getStatusClass(systemStatus.serverStatus)">
+                    {{ systemStatus.serverLoad }}%
+                  </div>
+                  <mat-progress-bar mode="determinate" [value]="systemStatus.serverLoad" 
+                                    [color]="systemStatus.serverLoad > 80 ? 'warn' : 'primary'">
+                  </mat-progress-bar>
+                </div>
+                
+                <div class="status-item">
+                  <div class="status-label">Database</div>
+                  <div class="status-value" [ngClass]="getStatusClass(systemStatus.databaseStatus)">
+                    {{ systemStatus.databaseStatus }}
+                  </div>
+                </div>
+                
+                <div class="status-item">
+                  <div class="status-label">Storage Used</div>
+                  <div class="status-value" [ngClass]="getStatusClass(systemStatus.storageStatus)">
+                    {{ systemStatus.storageUsed }} / {{ systemStatus.storageTotal }}
+                  </div>
+                  <mat-progress-bar mode="determinate" [value]="systemStatus.storagePercentage" 
+                                    [color]="systemStatus.storagePercentage > 90 ? 'warn' : 'primary'">
+                  </mat-progress-bar>
+                </div>
+                
+                <div class="status-item">
+                  <div class="status-label">CMS Version</div>
+                  <div class="status-value">
+                    {{ systemStatus.version }}
+                    <span class="version-badge" *ngIf="systemStatus.updateAvailable">Update Available</span>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

@@ -1,0 +1,31 @@
+.page-edit-container {
+    padding: 20px;
+    
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      padding: 30px 0;
+    }
+    
+    .full-width {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    
+    .editor-container {
+      margin-bottom: 20px;
+      
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        color: rgba(0, 0, 0, 0.6);
+      }
+      
+      mat-error {
+        font-size: 0.75rem;
+        margin-top: 5px;
+        color: #f44336;
+      }
+    }
+  }

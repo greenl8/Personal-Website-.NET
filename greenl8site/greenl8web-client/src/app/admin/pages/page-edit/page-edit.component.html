@@ -1,0 +1,45 @@
+<div class="page-edit-container">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ isEditing ? 'Edit Page' : 'Create New Page' }}</mat-card-title>
+      </mat-card-header>
+      
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner></mat-spinner>
+      </div>
+      
+      <form *ngIf="!loading" [formGroup]="pageForm" (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" required>
+            <mat-error *ngIf="pageForm.get('title').hasError('required')">
+              Title is required
+            </mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Slug</mat-label>
+            <input matInput formControlName="slug" placeholder="Leave empty to generate from title">
+          </mat-form-field>
+          
+          <div class="editor-container">
+            <label>Content</label>
+            <app-rich-text-editor formControlName="content"></app-rich-text-editor>
+            <mat-error *ngIf="pageForm.get('content').hasError('required') && pageForm.get('content').touched">
+              Content is required
+            </mat-error>
+          </div>
+          
+          <mat-checkbox formControlName="isPublished">Published</mat-checkbox>
+        </mat-card-content>
+        
+        <mat-card-actions align="end">
+          <button type="button" mat-button [routerLink]="['/admin/pages']">Cancel</button>
+          <button type="submit" mat-raised-button color="primary" [disabled]="pageForm.invalid || submitting">
+            {{ isEditing ? 'Update' : 'Create' }}
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </div>

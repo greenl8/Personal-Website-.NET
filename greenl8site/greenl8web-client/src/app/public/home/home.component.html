@@ -1,0 +1,102 @@
+<div class="home-container">
+    <div class="sidebar">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Categories</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <mat-nav-list>
+            <a mat-list-item 
+               *ngFor="let category of categories" 
+               (click)="filterByCategory(category.id)"
+               [class.active]="filter.categoryId === category.id">
+              {{ category.name }}
+            </a>
+          </mat-nav-list>
+          
+          <button *ngIf="filter.categoryId || filter.searchTerm" 
+                  mat-stroked-button 
+                  color="primary" 
+                  class="clear-filters-btn"
+                  (click)="clearFilters()">
+            Clear Filters
+          </button>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="search-card">
+        <mat-card-header>
+          <mat-card-title>Search</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="search-input">
+            <mat-label>Search posts</mat-label>
+            <input matInput 
+                   #searchInput 
+                   [value]="filter.searchTerm || ''" 
+                   (keyup.enter)="search(searchInput.value)">
+            <button mat-icon-button matSuffix (click)="search(searchInput.value)">
+              <mat-icon>search</mat-icon>
+            </button>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <div class="content">
+      <mat-card *ngIf="filter.categoryId || filter.searchTerm" class="filter-info">
+        <mat-card-content>
+          <span *ngIf="filter.categoryId">
+            Category: {{ selectedCategoryName }}
+          </span>
+          <span *ngIf="filter.searchTerm">
+            Search: "{{ filter.searchTerm }}"
+          </span>
+        </mat-card-content>
+      </mat-card>
+      
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner></mat-spinner>
+      </div>
+      
+      <div *ngIf="!loading">
+        <mat-card *ngFor="let post of posts" class="post-card">
+          <mat-card-header>
+            <mat-card-title>
+              <a [routerLink]="['/post', post.slug]">{{ post.title }}</a>
+            </mat-card-title>
+            <mat-card-subtitle>
+              <span>By {{ post.authorName }}</span>
+              <span class="date-separator">|</span>
+              <span>{{ post.publishedAt || post.createdAt | date:'mediumDate' }}</span>
+            </mat-card-subtitle>
+          </mat-card-header>
+          
+          <img *ngIf="post.featuredImage" 
+               mat-card-image 
+               [src]="post.featuredImage" 
+               [alt]="post.title">
+          
+          <mat-card-actions>
+            <a mat-button color="primary" [routerLink]="['/post', post.slug]">
+              READ MORE
+            </a>
+          </mat-card-actions>
+        </mat-card>
+        
+        <div *ngIf="posts.length === 0" class="no-posts">
+          <p>No posts found. Try clearing filters or searching for something else.</p>
+        </div>
+        
+        <app-pagination 
+          *ngIf="totalCount > 0"
+          [currentPage]="filter.page"
+          [pageSize]="filter.pageSize"
+          [totalCount]="totalCount"
+          (pageChanged)="onPageChange($event)">
+        </app-pagination>
+      </div>
+    </div>
+  </div>

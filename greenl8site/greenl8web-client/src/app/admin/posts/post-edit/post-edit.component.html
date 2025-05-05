@@ -1,0 +1,330 @@
+<div class="post-edit-container">
+  <!-- Top toolbar with actions -->
+  <mat-toolbar class="edit-toolbar">
+    <span class="page-title">{{ isEditing ? 'Edit Post: ' + (postForm.get('title').value || 'Untitled') : 'Create New Post' }}</span>
+    <span class="toolbar-spacer"></span>
+    
+    <!-- Action buttons -->
+    <div class="action-buttons">
+      <button mat-button [matMenuTriggerFor]="moreMenu" aria-label="More options">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #moreMenu="matMenu">
+        <button mat-menu-item (click)="onPreview()">
+          <mat-icon>visibility</mat-icon>
+          <span>Preview</span>
+        </button>
+        <button mat-menu-item [disabled]="!isEditing" [routerLink]="['/post', postForm.get('slug').value]" target="_blank">
+          <mat-icon>open_in_new</mat-icon>
+          <span>View Post</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="onDuplicate()" [disabled]="!isEditing">
+          <mat-icon>content_copy</mat-icon>
+          <span>Duplicate</span>
+        </button>
+        <button mat-menu-item (click)="onDelete()" [disabled]="!isEditing" color="warn">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+      
+      <button mat-stroked-button (click)="onCancel()">
+        Cancel
+      </button>
+      
+      <button mat-stroked-button 
+              *ngIf="!postForm.get('isPublished').value" 
+              (click)="onSaveDraft()"
+              [disabled]="submitting || !postForm.valid">
+        <mat-icon>save</mat-icon>
+        Save Draft
+      </button>
+      
+      <button mat-raised-button 
+              color="primary" 
+              (click)="onPublish()"
+              [disabled]="submitting || !postForm.valid">
+        <mat-icon>publish</mat-icon>
+        {{ postForm.get('isPublished').value ? 'Update' : 'Publish' }}
+      </button>
+    </div>
+  </mat-toolbar>
+
+  <!-- Loading spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <!-- Preview mode -->
+  <ng-container *ngIf="!loading && previewMode">
+    <div class="preview-toolbar">
+      <span>Preview Mode</span>
+      <button mat-raised-button color="primary" (click)="onPreview()">
+        <mat-icon>edit</mat-icon>
+        Exit Preview
+      </button>
+    </div>
+    
+    <div class="preview-container">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ postForm.get('title').value }}</mat-card-title>
+          <mat-card-subtitle>
+            <span *ngIf="postForm.get('categoryIds').value?.length">
+              Categories:
+              <span *ngFor="let catId of postForm.get('categoryIds').value; let last = last">
+                {{ getCategoryName(catId) }}{{ !last ? ', ' : '' }}
+              </span>
+            </span>
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <img *ngIf="postForm.get('featuredImage').value" 
+             mat-card-image 
+             [src]="postForm.get('featuredImage').value" 
+             [alt]="postForm.get('title').value">
+
+        <mat-card-content>
+          <div class="post-content" [innerHTML]="postForm.get('content').value"></div>
+          
+          <div *ngIf="postForm.get('tagIds').value?.length" class="post-tags">
+            <mat-chip-list>
+              <mat-chip *ngFor="let tagId of postForm.get('tagIds').value">
+                {{ getTagName(tagId) }}
+              </mat-chip>
+            </mat-chip-list>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </ng-container>
+
+  <!-- Edit mode -->
+  <form [formGroup]="postForm" *ngIf="!loading && !previewMode" class="post-edit-form">
+    <!-- Using a two-column layout for desktop -->
+    <div class="edit-grid">
+      <!-- Left column: Main content -->
+      <div class="main-column">
+        <mat-card class="card-main-content">
+          <mat-card-content>
+            <!-- Title -->
+            <mat-form-field appearance="outline" class="full-width title-field">
+              <mat-label>Post Title</mat-label>
+              <input matInput 
+                     formControlName="title" 
+                     placeholder="Enter title here" 
+                     required
+                     #titleInput>
+              <mat-hint align="end">{{ titleInput.value?.length || 0 }} characters</mat-hint>
+              <mat-error *ngIf="postForm.get('title').hasError('required')">
+                Title is required
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Slug -->
+            <div class="slug-container">
+              <mat-form-field appearance="outline" class="slug-field">
+                <mat-label>Permalink</mat-label>
+                <span matPrefix>{{ baseUrl }}/</span>
+                <input matInput formControlName="slug">
+                <button mat-icon-button matSuffix (click)="generateSlug()" matTooltip="Generate from title" type="button">
+                  <mat-icon>autorenew</mat-icon>
+                </button>
+                <mat-hint>URL-friendly version of the title</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <!-- Excerpt -->
+            <mat-form-field appearance="outline" class="full-width excerpt-field">
+              <mat-label>Excerpt</mat-label>
+              <textarea matInput 
+                        formControlName="excerpt" 
+                        placeholder="Brief summary of your post (optional)" 
+                        rows="3"
+                        #excerptInput>
+              </textarea>
+              <mat-hint align="end">{{ excerptInput.value?.length || 0 }}/160 characters</mat-hint>
+            </mat-form-field>
+
+            <!-- Content -->
+            <div class="editor-container">
+              <div class="editor-header">
+                <label class="editor-label">Content</label>
+                <div class="editor-actions">
+                  <button mat-icon-button 
+                          type="button" 
+                          (click)="toggleFullscreen()" 
+                          matTooltip="Toggle fullscreen editor">
+                    <mat-icon>{{ isFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+                  </button>
+                </div>
+              </div>
+              
+              <app-rich-text-editor formControlName="content"></app-rich-text-editor>
+              
+              <mat-error *ngIf="postForm.get('content').hasError('required') && postForm.get('content').touched">
+                Content is required
+              </mat-error>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      
+      <!-- Right column: Sidebar -->
+      <div class="sidebar-column">
+        <!-- Publish Settings -->
+        <mat-card class="card-publish">
+          <mat-card-header>
+            <mat-card-title>Publish</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="status-container">
+              <span class="status-label">Status:</span>
+              <span class="status-value" [ngClass]="{'published': postForm.get('isPublished').value}">
+                {{ postForm.get('isPublished').value ? 'Published' : 'Draft' }}
+              </span>
+            </div>
+            
+            <mat-slide-toggle formControlName="isPublished" color="primary">
+              {{ postForm.get('isPublished').value ? 'Published' : 'Draft' }}
+            </mat-slide-toggle>
+            
+            <div *ngIf="isEditing" class="meta-info">
+              <div>Created: {{ post?.createdAt | date:'medium' }}</div>
+              <div *ngIf="post?.updatedAt">Last modified: {{ post?.updatedAt | date:'medium' }}</div>
+              <div *ngIf="post?.publishedAt">Published: {{ post?.publishedAt | date:'medium' }}</div>
+            </div>
+
+            <div class="publish-actions">
+              <button mat-stroked-button 
+                      *ngIf="!postForm.get('isPublished').value" 
+                      (click)="onSaveDraft()"
+                      [disabled]="submitting || !postForm.valid"
+                      type="button"
+                      class="full-width-btn">
+                <mat-icon>save</mat-icon>
+                Save Draft
+              </button>
+              
+              <button mat-raised-button 
+                      color="primary" 
+                      (click)="onPublish()"
+                      [disabled]="submitting || !postForm.valid"
+                      type="button"
+                      class="full-width-btn">
+                <mat-icon>publish</mat-icon>
+                {{ postForm.get('isPublished').value ? 'Update' : 'Publish' }}
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        
+        <!-- Categories -->
+        <mat-card class="card-categories">
+          <mat-card-header>
+            <mat-card-title>Categories</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="categories-list">
+              <mat-selection-list formControlName="categoryIds" [compareWith]="compareIds">
+                <mat-list-option *ngFor="let category of categories" [value]="category.id">
+                  {{ category.name }}
+                </mat-list-option>
+              </mat-selection-list>
+            </div>
+            
+            <button mat-button 
+                    color="primary" 
+                    class="add-new-btn"
+                    (click)="openAddCategoryDialog()"
+                    type="button">
+              <mat-icon>add</mat-icon> Add New Category
+            </button>
+          </mat-card-content>
+        </mat-card>
+        
+        <!-- Tags -->
+        <mat-card class="card-tags">
+          <mat-card-header>
+            <mat-card-title>Tags</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Select or create tags</mat-label>
+              <mat-chip-list #chipList>
+                <mat-chip *ngFor="let tagId of postForm.get('tagIds').value" 
+                         [removable]="true"
+                         (removed)="removeTag(tagId)">
+                  {{ getTagNameById(tagId) }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="New tag..."
+                       [matChipInputFor]="chipList"
+                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                       (matChipInputTokenEnd)="addTag($event)"
+                       [matAutocomplete]="auto"
+                       #tagInput>
+              </mat-chip-list>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                  {{ tag.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            
+            <div class="popular-tags">
+              <span class="popular-tags-label">Popular:</span>
+              <a *ngFor="let tag of popularTags" 
+                 (click)="addPopularTag(tag)" 
+                 class="popular-tag-link">
+                {{ tag.name }}
+              </a>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        
+        <!-- Featured Image -->
+        <mat-card class="card-featured-image">
+          <mat-card-header>
+            <mat-card-title>Featured Image</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="featured-image-container">
+              <div *ngIf="postForm.get('featuredImage').value" class="image-preview">
+                <img [src]="postForm.get('featuredImage').value" [alt]="postForm.get('title').value || 'Featured image'">
+                <button mat-mini-fab 
+                        color="warn" 
+                        class="remove-image-btn" 
+                        (click)="removeImage()"
+                        type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              
+              <div *ngIf="!postForm.get('featuredImage').value" class="no-image">
+                <mat-icon>image</mat-icon>
+                <p>No image selected</p>
+              </div>
+              
+              <button mat-stroked-button 
+                      type="button" 
+                      (click)="openMediaSelector()" 
+                      class="full-width-btn">
+                <mat-icon>{{ postForm.get('featuredImage').value ? 'photo_library' : 'add_photo_alternate' }}</mat-icon>
+                {{ postForm.get('featuredImage').value ? 'Change Featured Image' : 'Set Featured Image' }}
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Media selector component reference -->
+<app-media-selector #mediaSelector (mediaSelected)="onSelectFeaturedImage($event)"></app-media-selector>

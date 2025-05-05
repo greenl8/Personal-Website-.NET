@@ -1,0 +1,20 @@
+.media-dialog-content {
+    min-height: 400px;
+    
+    .upload-container {
+      margin-bottom: 15px;
+    }
+    
+    .filter-container {
+      margin-bottom: 20px;
+      
+      .search-field {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      
+          .filter-buttons {
+            display: flex;
+          }
+        }
+      }

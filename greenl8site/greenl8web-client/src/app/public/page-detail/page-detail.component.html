@@ -1,0 +1,31 @@
+<!-- src/app/public/page-detail/page-detail.component.html -->
+<div class="page-detail-container">
+    <!-- Loading spinner -->
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  
+    <!-- Error message -->
+    <div *ngIf="error && !loading" class="error-container">
+      <mat-card>
+        <mat-card-content>
+          <h2>Page Not Found</h2>
+          <p>Sorry, the page you are looking for does not exist or is no longer available.</p>
+          <button mat-raised-button color="primary" routerLink="/">Return to Homepage</button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  
+    <!-- Page content -->
+    <div *ngIf="page && !loading && !error" class="page-content-wrapper">
+      <mat-card class="page-card">
+        <mat-card-header>
+          <mat-card-title>{{ page.title }}</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="page-content" [innerHTML]="page.content"></div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>

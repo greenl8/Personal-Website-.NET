@@ -1,0 +1,17 @@
+<div class="quick-actions-grid">
+    <a *ngFor="let action of actions" 
+       [routerLink]="action.route" 
+       class="quick-action-card" 
+       matRipple>
+      
+      <div class="action-icon" 
+           [style.background-color]="getIconBackground(action.color)">
+        <mat-icon>{{ action.icon }}</mat-icon>
+      </div>
+      
+      <div class="action-content">
+        <h3 class="action-title">{{ action.title }}</h3>
+        <p class="action-description">{{ action.description }}</p>
+      </div>
+    </a>
+  </div>

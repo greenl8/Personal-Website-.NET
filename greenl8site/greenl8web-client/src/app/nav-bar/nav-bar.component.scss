@@ -1,0 +1,17 @@
+.spacer {
+    flex: 1 1 auto;
+  }
+  
+  .home-button {
+    display: flex;
+    align-items: center;
+    
+    .site-name {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  }
+  
+  button {
+    margin-left: 5px;
+  }

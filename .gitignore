@@ -1,0 +1,17 @@
+# .NET build artifacts
+bin/
+obj/
+
+# Angular build artifacts
+node_modules/
+dist/
+.angular/
+
+# IDE files
+.vs/
+.vscode/
+*.suo
+*.user
+
+Drafts/
+wwwroot/

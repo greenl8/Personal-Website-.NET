@@ -1,0 +1,202 @@
+.page-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    
+    .loading-container, .error-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      
+      mat-card {
+        max-width: 500px;
+        text-align: center;
+        
+        h2 {
+          margin-top: 0;
+        }
+      }
+    }
+    
+    .page-content-wrapper {
+      .page-card {
+        mat-card-header {
+          margin-bottom: 30px;
+          
+          mat-card-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #333;
+            text-align: center;
+          }
+        }
+        
+        .page-content {
+          font-size: 1.1rem;
+          line-height: 1.7;
+          color: #333;
+          
+          ::ng-deep {
+            h1, h2, h3, h4, h5, h6 {
+              margin-top: 1.5em;
+              margin-bottom: 0.8em;
+              color: #222;
+            }
+            
+            h1 {
+              font-size: 2rem;
+            }
+            
+            h2 {
+              font-size: 1.8rem;
+            }
+            
+            h3 {
+              font-size: 1.5rem;
+            }
+            
+            h4 {
+              font-size: 1.3rem;
+            }
+            
+            p {
+              margin-bottom: 1.5em;
+            }
+            
+            img {
+              max-width: 100%;
+              height: auto;
+              border-radius: 4px;
+              margin: 1.5em 0;
+            }
+            
+            blockquote {
+              border-left: 4px solid #3f51b5;
+              padding-left: 20px;
+              margin-left: 0;
+              color: #555;
+              font-style: italic;
+            }
+            
+            ul, ol {
+              margin-bottom: 1.5em;
+              padding-left: 2em;
+              
+              li {
+                margin-bottom: 0.5em;
+              }
+            }
+            
+            pre {
+              background-color: #f5f5f5;
+              padding: 15px;
+              border-radius: 4px;
+              overflow-x: auto;
+              margin: 1em 0;
+            }
+            
+            code {
+              background-color: #f5f5f5;
+              padding: 2px 5px;
+              border-radius: 3px;
+              font-family: monospace;
+            }
+            
+            a {
+              color: #3f51b5;
+              text-decoration: none;
+              
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+            
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 1.5em 0;
+              
+              th, td {
+                border: 1px solid #ddd;
+                padding: 12px;
+              }
+              
+              th {
+                background-color: #f2f2f2;
+                text-align: left;
+                font-weight: bold;
+              }
+              
+              tr:nth-child(even) {
+                background-color: #f9f9f9;
+              }
+            }
+            
+            hr {
+              border: 0;
+              height: 1px;
+              background-color: #ddd;
+              margin: 2em 0;
+            }
+            
+            .alignleft {
+              float: left;
+              margin-right: 1.5em;
+              margin-bottom: 1em;
+            }
+            
+            .alignright {
+              float: right;
+              margin-left: 1.5em;
+              margin-bottom: 1em;
+            }
+            
+            .aligncenter {
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+            }
+            
+            // Clear floats after alignment
+            .clearfix::after {
+              content: "";
+              clear: both;
+              display: table;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Responsive styles
+  @media (max-width: 768px) {
+    .page-detail-container {
+      .page-content-wrapper {
+        .page-card {
+          mat-card-header {
+            mat-card-title {
+              font-size: 1.8rem;
+            }
+          }
+          
+          .page-content {
+            ::ng-deep {
+              h1 {
+                font-size: 1.6rem;
+              }
+              
+              h2 {
+                font-size: 1.4rem;
+              }
+              
+              h3 {
+                font-size: 1.2rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }

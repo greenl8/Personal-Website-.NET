@@ -1,0 +1,37 @@
+<div class="media-library-container">
+    <div class="header-actions">
+      <h1>Media Library</h1>
+      <button mat-raised-button color="primary" (click)="fileInput.click()">
+        <mat-icon>upload</mat-icon> Upload
+        <input #fileInput type="file" style="display: none" (change)="onFileSelected($event)">
+      </button>
+    </div>
+    
+    <mat-card>
+      <mat-card-content>
+        <div class="filter-container">
+          <mat-form-field class="search-field">
+            <mat-label>Search files</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search by filename">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          
+          <div class="filter-buttons">
+            <button mat-button [class.active]="!filter.fileType" (click)="clearFilters()">All</button>
+            <button mat-button [class.active]="filter.fileType === 'image/'" (click)="filterByType('image/')">Images</button>
+            <button mat-button [class.active]="filter.fileType === 'video/'" (click)="filterByType('video/')">Videos</button>
+            <button mat-button [class.active]="filter.fileType === 'application/'" (click)="filterByType('application/')">Documents</button>
+          </div>
+        </div>
+        
+        <div class="loading-container" *ngIf="loading || uploading">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p *ngIf="uploading">Uploading file...</p>
+        </div>
+        
+        <div class="media-grid" *ngIf="!loading && !uploading">
+          <div class="media-item" *ngFor="let media of mediaItems">
+            <div class="media-preview">
+              <img *ngIf="media.fileType.startsWith('image/')" [src]="media.url" [alt]="media.fileName">
+              <div *ngIf="!media.fileType.startsWith('image/')" class="file-icon">
+                <mat-icon>{{ media.fileType.startsWith('video/') ? 'movie' : 'insert_drive_file' }}</mat-icon>

@@ -1,0 +1,42 @@
+<div class="activity-container">
+    <div *ngIf="activities.length === 0" class="no-activities">
+      <mat-icon>notifications_off</mat-icon>
+      <p>No recent activity</p>
+    </div>
+    
+    <div class="activity-list" *ngIf="activities.length > 0">
+      <div *ngFor="let activity of activities; let last = last" class="activity-item">
+        <div class="activity-icon" [ngClass]="getActivityClass(activity.type)">
+          <mat-icon>{{ getActivityIcon(activity.type) }}</mat-icon>
+        </div>
+        
+        <div class="activity-content">
+          <div class="activity-details">
+            <div class="activity-message">
+              <span class="activity-user">{{ activity.user }}</span>
+              <span [innerHTML]="activity.message"></span>
+            </div>
+            <div class="activity-time">
+              {{ formatRelativeTime(activity.timestamp) }}
+            </div>
+          </div>
+          
+          <div class="activity-actions">
+            <a mat-icon-button 
+               [routerLink]="getActivityRoute(activity)" 
+               matTooltip="View details">
+              <mat-icon>visibility</mat-icon>
+            </a>
+          </div>
+        </div>
+        
+        <mat-divider *ngIf="!last"></mat-divider>
+      </div>
+    </div>
+    
+    <div class="activity-footer" *ngIf="activities.length > 5">
+      <a routerLink="/admin/activities" mat-button color="primary">
+        View All Activity
+      </a>
+    </div>
+  </div>
