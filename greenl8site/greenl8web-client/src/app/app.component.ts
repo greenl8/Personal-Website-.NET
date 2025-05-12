@@ -1,17 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { HelloWorldService } from './services/greenl8web.service';
 import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  standalone: true,
   imports: [
     CommonModule,
+    RouterOutlet,
+    NavBarComponent
   ]
 })
 export class AppComponent implements OnInit {
-  title = 'hello-world-client';
+  title = 'Greenl8 Website';
   message: string = '';
   loading: boolean = true;
   error: string = '';

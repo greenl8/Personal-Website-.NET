@@ -88,7 +88,7 @@ export class AdminDashboardComponent implements OnInit {
   selectedTimePeriod = '30d';
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private postService: PostService,
     private pageService: PageService,
     private mediaService: MediaService,

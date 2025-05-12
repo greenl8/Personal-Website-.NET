@@ -62,7 +62,10 @@ namespace YourProjectName
                 {
                     policy.AllowAnyHeader()
                           .AllowAnyMethod()
-                          .WithOrigins("http://localhost:4200"); // Angular development server
+                          .WithOrigins(
+                              "http://localhost:4200",  // Default Angular port
+                              "http://localhost:4201"   // Alternative Angular port
+                          );
                 });
             });
             
