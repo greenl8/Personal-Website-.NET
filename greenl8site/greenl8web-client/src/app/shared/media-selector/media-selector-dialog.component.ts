@@ -1,11 +1,15 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MediaService } from '../../services/media.service';
 import { Media, MediaFilter } from '../../models/media.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { PaginationComponent } from '../pagination/pagination.component';
 
 // Media Selector Dialog Component
 @Component({
@@ -15,13 +19,14 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
   imports: [
     CommonModule,
     MatDialogModule,
+    MatButtonModule,
     MatIconModule,
-    MatLabel,
-    MatFormField
-    // other imports
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    PaginationComponent
   ],
   standalone: true
-  
 })
 export class MediaSelectorDialogComponent implements OnInit {
   mediaItems: Media[] = [];
@@ -128,6 +133,8 @@ export class MediaSelectorDialogComponent implements OnInit {
 // Main Media Selector Component
 @Component({
   selector: 'app-media-selector',
+  standalone: true,
+  imports: [ MatDialogModule ],
   template: ''
 })
 export class MediaSelectorComponent {

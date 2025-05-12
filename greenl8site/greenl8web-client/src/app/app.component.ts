@@ -3,6 +3,7 @@ import { HelloWorldService } from './services/greenl8web.service';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
   imports: [
     CommonModule,
     RouterOutlet,
-    NavBarComponent
+    NavBarComponent,
+    MatFormFieldModule
   ]
 })
 export class AppComponent implements OnInit {

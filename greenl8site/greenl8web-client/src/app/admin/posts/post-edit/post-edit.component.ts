@@ -1,10 +1,28 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 
+// Material Modules
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatListModule } from '@angular/material/list';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
+// Services and Models
 import { PostService } from '../../../services/post.service';
 import { CategoryService } from '../../../services/category.service';
 import { TagService } from '../../../services/tag.service';
@@ -15,25 +33,32 @@ import { Category } from '../../../models/category.model';
 import { Tag } from '../../../models/tag.model';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { AddCategoryDialogComponent } from '../../../shared/add-category-dialog/add-category-dialog.component';
-import { MatToolbar } from '@angular/material/toolbar';
-import { MatIcon } from '@angular/material/icon';
-import { MatMenu, MatMenuModule } from '@angular/material/menu';
-import { MatDivider } from '@angular/material/divider';
 
 @Component({
   selector: 'app-post-edit',
-  templateUrl: './post-edit.component.html',
-  styleUrls: ['./post-edit.component.scss'],
+  standalone: true,
   imports: [
-    MatToolbar,
-    MatIcon,
-    MatMenu,
-    MatDivider,
-    MediaSelectorComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    MatToolbarModule,
+    MatIconModule,
     MatMenuModule,
-    RouterModule
-],
-    standalone: true,
+    MatDividerModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTooltipModule,
+    MatSlideToggleModule,
+    MatListModule,
+    MatAutocompleteModule,
+    MediaSelectorComponent
+  ],
+  templateUrl: './post-edit.component.html',
+  styleUrls: ['./post-edit.component.scss']
 })
 export class PostEditComponent implements OnInit {
 

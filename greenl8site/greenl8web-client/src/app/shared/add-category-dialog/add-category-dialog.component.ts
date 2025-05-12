@@ -1,11 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog, MatDialogActions, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CategoryService } from '../../services/category.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoryCreateEdit } from '../../models/category.model';
-import { MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-add-category-dialog',
@@ -14,15 +19,17 @@ import { MatIcon } from '@angular/material/icon';
 
     standalone: true,
 
-    imports: [MatLabel,
-        MatDialogActions,
-        MatHint,
-        MatIcon,
-        MatFormField,
+    imports: [CommonModule,
         ReactiveFormsModule,
-        MatDialogContent]
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule]
 })
-export class AddCategoryDialogComponent implements OnInit {
+export class AddCategoryDialogComponent {
   categoryForm: FormGroup;
   submitting = false;
   

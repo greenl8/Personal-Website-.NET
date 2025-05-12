@@ -10,6 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatList, MatNavList } from '@angular/material/list';
 import { MatCard, MatCardHeader, MatCardModule, MatCardTitle } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PaginationComponent } from '../../shared/pagination/pagination.component';
 
 @Component({
   selector: 'app-home',
@@ -25,8 +31,13 @@ import { MatCard, MatCardHeader, MatCardModule, MatCardTitle } from '@angular/ma
     MatNavList,
     MatCardHeader,
     MatCardTitle,
-    MatCardModule
-    // other imports
+    MatCardModule,
+    RouterModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    PaginationComponent
   ],
   standalone: true
 })
