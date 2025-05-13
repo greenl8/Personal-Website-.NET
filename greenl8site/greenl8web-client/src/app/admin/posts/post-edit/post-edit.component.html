@@ -7,29 +7,30 @@
     <!-- Action buttons -->
     <div class="action-buttons">
       <button mat-button [matMenuTriggerFor]="moreMenu" aria-label="More options">
-        <mat-icon>more_vert</mat-icon>
+        <mat-icon><img src="assets/images/more-icon.png" alt="More options" class="toolbar-img-icon"></mat-icon>
       </button>
       <mat-menu #moreMenu="matMenu">
         <button mat-menu-item (click)="onPreview()">
-          <mat-icon>visibility</mat-icon>
+          <mat-icon><img src="assets/images/visitwebsite1.png" alt="Preview" class="toolbar-img-icon"></mat-icon>
           <span>Preview</span>
         </button>
         <button mat-menu-item [disabled]="!isEditing" [routerLink]="['/post', postForm.get('slug').value]" target="_blank">
-          <mat-icon>open_in_new</mat-icon>
+          <mat-icon><img src="assets/images/external-link.png" alt="View Post" class="toolbar-img-icon"></mat-icon>
           <span>View Post</span>
         </button>
         <mat-divider></mat-divider>
         <button mat-menu-item (click)="onDuplicate()" [disabled]="!isEditing">
-          <mat-icon>content_copy</mat-icon>
+          <mat-icon><img src="assets/images/copy-icon.png" alt="Duplicate" class="toolbar-img-icon"></mat-icon>
           <span>Duplicate</span>
         </button>
         <button mat-menu-item (click)="onDelete()" [disabled]="!isEditing" color="warn">
-          <mat-icon>delete</mat-icon>
+          <mat-icon><img src="assets/images/delete-icon.png" alt="Delete" class="toolbar-img-icon"></mat-icon>
           <span>Delete</span>
         </button>
       </mat-menu>
       
       <button mat-stroked-button (click)="onCancel()">
+        <mat-icon><img src="assets/images/cancel-icon.png" alt="Cancel" class="toolbar-img-icon"></mat-icon>
         Cancel
       </button>
       
@@ -37,7 +38,7 @@
               *ngIf="!postForm.get('isPublished').value" 
               (click)="onSaveDraft()"
               [disabled]="submitting || !postForm.valid">
-        <mat-icon>save</mat-icon>
+        <mat-icon><img src="assets/images/save-icon.png" alt="Save" class="toolbar-img-icon"></mat-icon>
         Save Draft
       </button>
       
@@ -45,7 +46,7 @@
               color="primary" 
               (click)="onPublish()"
               [disabled]="submitting || !postForm.valid">
-        <mat-icon>publish</mat-icon>
+        <mat-icon><img src="assets/images/publishicon.png" alt="Publish" class="toolbar-img-icon"></mat-icon>
         {{ postForm.get('isPublished').value ? 'Update' : 'Publish' }}
       </button>
     </div>
@@ -61,7 +62,7 @@
     <div class="preview-toolbar">
       <span>Preview Mode</span>
       <button mat-raised-button color="primary" (click)="onPreview()">
-        <mat-icon>edit</mat-icon>
+        <mat-icon><img src="assets/images/edit-icon.png" alt="Edit" class="toolbar-img-icon"></mat-icon>
         Exit Preview
       </button>
     </div>
@@ -129,7 +130,7 @@
                 <span matPrefix>{{ baseUrl }}/</span>
                 <input matInput formControlName="slug">
                 <button mat-icon-button matSuffix (click)="generateSlug()" matTooltip="Generate from title" type="button">
-                  <mat-icon>autorenew</mat-icon>
+                  <mat-icon><img src="assets/images/refresh-icon-10846.png" alt="Generate Slug" class="toolbar-img-icon"></mat-icon>
                 </button>
                 <mat-hint>URL-friendly version of the title</mat-hint>
               </mat-form-field>
@@ -156,7 +157,9 @@
                           type="button" 
                           (click)="toggleFullscreen()" 
                           matTooltip="Toggle fullscreen editor">
-                    <mat-icon>{{ isFullscreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+                    <mat-icon><img [src]="isFullscreen ? 'assets/images/exit-fullscreen.png' : 'assets/images/fullscreen.png'" 
+                             [alt]="isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'" 
+                             class="toolbar-img-icon"></mat-icon>
                   </button>
                 </div>
               </div>
@@ -204,7 +207,7 @@
                       [disabled]="submitting || !postForm.valid"
                       type="button"
                       class="full-width-btn">
-                <mat-icon>save</mat-icon>
+                <mat-icon><img src="assets/images/save-icon.png" alt="Save" class="toolbar-img-icon"></mat-icon>
                 Save Draft
               </button>
               
@@ -214,7 +217,7 @@
                       [disabled]="submitting || !postForm.valid"
                       type="button"
                       class="full-width-btn">
-                <mat-icon>publish</mat-icon>
+                <mat-icon><img src="assets/images/publishicon.png" alt="Publish" class="toolbar-img-icon"></mat-icon>
                 {{ postForm.get('isPublished').value ? 'Update' : 'Publish' }}
               </button>
             </div>
@@ -241,7 +244,7 @@
                     class="add-new-btn"
                     (click)="openAddCategoryDialog()"
                     type="button">
-              <mat-icon>add</mat-icon> Add New Category
+              <mat-icon><img src="assets/images/addicon.png" alt="Add" class="toolbar-img-icon"></mat-icon> Add New Category
             </button>
           </mat-card-content>
         </mat-card>
@@ -253,28 +256,29 @@
           </mat-card-header>
           
           <mat-card-content>
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Select or create tags</mat-label>
-              <mat-chip-list #chipList>
-                <mat-chip *ngFor="let tagId of postForm.get('tagIds').value" 
+            <!-- <mat-form-field appearance="outline" class="full-width"> -->
+              <!-- <mat-label>Select or create tags</mat-label> -->
+              <mat-chip-grid #chipList aria-label="Tag selection" class="tag-chip-grid">
+                <mat-chip-row *ngFor="let tagIdCtrl of tagIdsArray.controls" 
                          [removable]="true"
-                         (removed)="removeTag(tagId)">
-                  {{ getTagNameById(tagId) }}
-                  <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
+                         (removed)="removeTag(tagIdCtrl.value)">
+                  {{ getTagNameById(tagIdCtrl.value) }}
+                  <mat-icon matChipRemove><img src="assets/images/close-icon.png" alt="Remove" class="chip-icon"></mat-icon>
+                </mat-chip-row>
                 <input placeholder="New tag..."
                        [matChipInputFor]="chipList"
                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                        (matChipInputTokenEnd)="addTag($event)"
                        [matAutocomplete]="auto"
+                       formControlName="tagInputCtrl" 
                        #tagInput>
-              </mat-chip-list>
+              </mat-chip-grid>
               <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
-                <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                <mat-option *ngFor="let tag of filteredTags$ | async" [value]="tag">
                   {{ tag.name }}
                 </mat-option>
               </mat-autocomplete>
-            </mat-form-field>
+            <!-- </mat-form-field> -->
             
             <div class="popular-tags">
               <span class="popular-tags-label">Popular:</span>
@@ -302,12 +306,12 @@
                         class="remove-image-btn" 
                         (click)="removeImage()"
                         type="button">
-                  <mat-icon>close</mat-icon>
+                  <mat-icon><img src="assets/images/close-icon.png" alt="Remove" class="toolbar-img-icon"></mat-icon>
                 </button>
               </div>
               
               <div *ngIf="!postForm.get('featuredImage').value" class="no-image">
-                <mat-icon>image</mat-icon>
+                <mat-icon><img src="assets/images/image-icon.png" alt="No image" class="placeholder-icon"></mat-icon>
                 <p>No image selected</p>
               </div>
               
@@ -315,7 +319,9 @@
                       type="button" 
                       (click)="openMediaSelector()" 
                       class="full-width-btn">
-                <mat-icon>{{ postForm.get('featuredImage').value ? 'photo_library' : 'add_photo_alternate' }}</mat-icon>
+                <mat-icon><img [src]="postForm.get('featuredImage').value ? 'assets/images/image-gallery.png' : 'assets/images/addicon.png'" 
+                         [alt]="postForm.get('featuredImage').value ? 'Change Image' : 'Add Image'" 
+                         class="toolbar-img-icon"></mat-icon>
                 {{ postForm.get('featuredImage').value ? 'Change Featured Image' : 'Set Featured Image' }}
               </button>
             </div>

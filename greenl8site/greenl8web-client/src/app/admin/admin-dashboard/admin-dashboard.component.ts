@@ -174,6 +174,7 @@ export class AdminDashboardComponent implements OnInit {
    */
   toggleSidenav(): void {
     this.sidenavOpen = !this.sidenavOpen;
+    console.log('Sidenav state:', this.sidenavOpen ? 'open' : 'closed');
   }
   
   /**

@@ -1,17 +1,46 @@
+mat-toolbar {
+  background-color: #2c2c2c; /* Match page background for seamless look */
+  color: #f0f0f0; /* Ensure text color is light for contrast */
+  box-shadow: none; /* Remove any default shadow to make it flat */
+  padding: 0 16px; /* Adjust padding as needed */
+  height: auto; /* Allow height to be determined by content */
+  min-height: 56px; /* Standard min-height for toolbars */
+  justify-content: center; /* Center the content of the navbar */
+  gap: 15px; /* Adds space between the buttons/menus */
+}
+
+/* Remove spacer style as it's no longer used */
+/*
 .spacer {
     flex: 1 1 auto;
   }
+*/
+
+/* Remove style for .home-button .site-name as it's removed from HTML */
+/*
+.home-button {
+  display: flex;
+  align-items: center;
+  .site-name {
+    display: none; /* Hide the site name in this context as it's already in the main header */
   
-  .home-button {
-    display: flex;
-    align-items: center;
-    
-    .site-name {
-      font-size: 1.2rem;
-      font-weight: 500;
-    }
+
+/* Styling for buttons within the toolbar */
+button.mat-button, button.mat-menu-item { /* Target mat-button and mat-menu-item */
+  color: #f0f0f0 !important; /* Ensure text color is light, !important if needed for specificity */
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
   }
-  
-  button {
-    margin-left: 5px;
-  }
+}
+
+/* Specifically for the user menu button if it contains an icon */
+button.mat-button mat-icon {
+  margin-right: 5px; /* Space between icon and text in user menu button */
+  vertical-align: middle;
+}
+
+/* Ensure the nav links are aligned and spaced well */
+:host {
+  display: block; /* Make the host element a block for better layout control */
+  width: 100%;
+}

@@ -1,3 +1,11 @@
-<div class="quill-editor-container">
+<div class="quill-editor-container" [class.disabled]="disabled">
+  <div *ngIf="isBrowser && !hasError" class="editor-wrapper">
     <div #editor></div>
   </div>
+  <div *ngIf="hasError" class="quill-error">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="!isBrowser" class="editor-fallback">
+    Rich text editor not available in this environment
+  </div>
+</div>

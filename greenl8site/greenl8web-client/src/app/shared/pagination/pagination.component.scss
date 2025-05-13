@@ -18,7 +18,7 @@
       
       mat-form-field {
         width: 60px;
-        margin-top: -16px; // Adjust for Material form field padding
+        margin-top: -16px;
         
         ::ng-deep {
           .mat-form-field-wrapper {
@@ -49,19 +49,31 @@
       align-items: center;
       
       button[mat-icon-button] {
-        width: 36px;
-        height: 36px;
-        line-height: 36px;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        padding: 4px;
         
         mat-icon {
-          font-size: 20px;
-          width: 20px;
-          height: 20px;
-          line-height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 24px;
+          height: 24px;
+          line-height: 24px;
+          
+          img.toolbar-img-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-width: 20px;
+            max-height: 20px;
+          }
         }
         
         &[disabled] {
           color: rgba(0, 0, 0, 0.26);
+          opacity: 0.5;
         }
       }
       
@@ -70,10 +82,10 @@
         align-items: center;
         
         button {
-          min-width: 36px;
-          height: 36px;
+          min-width: 32px;
+          height: 32px;
           padding: 0;
-          line-height: 36px;
+          line-height: 32px;
           border-radius: 4px;
           margin: 0 2px;
           
@@ -107,12 +119,27 @@
       .pagination-controls {
         order: 2;
         
-        .page-numbers {
-          button {
-            min-width: 32px;
-            height: 32px;
-            line-height: 32px;
+        button[mat-icon-button] {
+          width: 28px;
+          height: 28px;
+          line-height: 28px;
+          
+          mat-icon {
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            
+            img.toolbar-img-icon {
+              max-width: 16px;
+              max-height: 16px;
+            }
           }
+        }
+        
+        .page-numbers button {
+          min-width: 28px;
+          height: 28px;
+          line-height: 28px;
         }
       }
     }
@@ -123,7 +150,6 @@
     .pagination-container {
       .pagination-controls {
         .page-numbers {
-          /* Hide all but the current page and adjacent pages on very small screens */
           button:not(.active):not(.current-adjacent) {
             display: none;
           }

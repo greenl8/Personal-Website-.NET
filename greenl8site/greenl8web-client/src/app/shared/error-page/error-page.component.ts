@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-error-page',
   template: `
     <div class="error-container">
-      <mat-icon class="error-icon">{{ icon }}</mat-icon>
+      <mat-icon><img src="assets/images/errordefault.png" alt="Error Icon" class="toolbar-img-icon"></mat-icon>
       <h1>{{ title }}</h1>
       <p>{{ message }}</p>
       <div class="actions">

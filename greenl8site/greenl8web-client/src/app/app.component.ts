@@ -13,7 +13,6 @@ import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-
   imports: [
     CommonModule,
     RouterOutlet,
-    NavBarComponent,
     MatFormFieldModule
   ]
 })

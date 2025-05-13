@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
+import { NavBarComponent } from '../../nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-home',
@@ -26,9 +27,6 @@ import { PaginationComponent } from '../../shared/pagination/pagination.componen
     CommonModule,
     MatDialogModule,
     MatIconModule,
-    MatLabel,
-    MatFormField,
-    MatNavList,
     MatCardHeader,
     MatCardTitle,
     MatCardModule,
@@ -37,7 +35,8 @@ import { PaginationComponent } from '../../shared/pagination/pagination.componen
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    PaginationComponent
+    PaginationComponent,
+    NavBarComponent
   ],
   standalone: true
 })

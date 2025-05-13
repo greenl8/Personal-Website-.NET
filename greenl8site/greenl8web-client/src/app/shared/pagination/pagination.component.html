@@ -24,7 +24,7 @@
               [disabled]="!hasPreviousPage()" 
               (click)="goToPage(1)" 
               aria-label="First page">
-        <mat-icon>first_page</mat-icon>
+        <mat-icon><img src="assets/images/dashboardicon1v2.png" alt="Default Icon" class="toolbar-img-icon"></mat-icon>
       </button>
       
       <!-- Previous page button -->
@@ -32,7 +32,7 @@
               [disabled]="!hasPreviousPage()" 
               (click)="goToPage(currentPage - 1)" 
               aria-label="Previous page">
-        <mat-icon>chevron_left</mat-icon>
+              <mat-icon><img src="assets/images/chevron-sign-left.png" alt="Chevron left Icon" class="toolbar-img-icon"></mat-icon>
       </button>
       
       <!-- Page number buttons -->
@@ -50,7 +50,7 @@
               [disabled]="!hasNextPage()" 
               (click)="goToPage(currentPage + 1)" 
               aria-label="Next page">
-        <mat-icon>chevron_right</mat-icon>
+              <mat-icon><img src="assets/images/chevron-sign-to-right.png" alt="Chevron right Icon" class="toolbar-img-icon"></mat-icon>
       </button>
       
       <!-- Last page button -->
@@ -59,7 +59,7 @@
               [disabled]="!hasNextPage()" 
               (click)="goToPage(totalPages)" 
               aria-label="Last page">
-        <mat-icon>last_page</mat-icon>
+        <mat-icon><img src="assets/images/chevron-sign-right.png" alt="Chevron left Icon" class="toolbar-img-icon"></mat-icon>
       </button>
     </div>
   </div>

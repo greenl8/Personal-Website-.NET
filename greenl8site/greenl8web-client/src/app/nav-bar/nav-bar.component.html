@@ -1,35 +1,31 @@
 <mat-toolbar color="primary">
-    <a mat-button routerLink="/" class="home-button">
-      <span class="site-name">greenl8 portfolio</span>
-    </a>
-    
-    <span class="spacer"></span>
-    
-    <!-- Public navigation -->
+    <!-- Public navigation - Centered -->
     <button mat-button [matMenuTriggerFor]="pagesMenu">Pages</button>
-    <mat-menu #pagesMenu="matMenu">
+    <mat-menu #pagesMenu="matMenu" [overlapTrigger]="false">
       <button mat-menu-item routerLink="/about">About</button>
       <button mat-menu-item routerLink="/contact">Contact</button>
+      <!-- Add other public page links here as menu items -->
     </mat-menu>
     
-    <!-- User controls -->
+    <!-- Admin controls -->
     <ng-container *ngIf="(currentUser$ | async) === null">
-      <button mat-button routerLink="/login">Login</button>
+      <!-- If not logged in, shows "Admin" button linking to admin (which should redirect to login) -->
+      <button mat-button routerLink="/admin">Admin</button> 
     </ng-container>
     
     <ng-container *ngIf="(currentUser$ | async) as user">
-      <button mat-button [matMenuTriggerFor]="userMenu">
-        <mat-icon>account_circle</mat-icon>
-        {{ user.username }}
+      <!-- If logged in (always as admin in your case) -->
+      <button mat-button [matMenuTriggerFor]="adminMenu">
+        <mat-icon><img src="assets/images/dashboardicon1v2.png" alt="Default Icon" class="toolbar-img-icon"></mat-icon> <!-- Changed icon to be more admin-specific -->
+        Admin
       </button>
-      
-      <mat-menu #userMenu="matMenu">
-        <button *ngIf="isAdmin()" mat-menu-item routerLink="/admin">
-          <mat-icon>dashboard</mat-icon>
+      <mat-menu #adminMenu="matMenu" [overlapTrigger]="false">
+        <button mat-menu-item routerLink="/admin"> <!-- Link to the main admin area -->
+          <mat-icon><img src="assets/images/dashboardicon1v2.png" alt="Default Icon" class="toolbar-img-icon"></mat-icon>
           Admin Dashboard
         </button>
         <button mat-menu-item (click)="logout()">
-          <mat-icon>exit_to_app</mat-icon>
+          <mat-icon><img src="assets/images/dashboardicon1v2.png" alt="Default Icon" class="toolbar-img-icon"></mat-icon>
           Logout
         </button>
       </mat-menu>

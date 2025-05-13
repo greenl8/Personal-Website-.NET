@@ -4,74 +4,67 @@
     <mat-sidenav mode="side" [opened]="sidenavOpen" class="admin-sidenav" disableClose="true">
       <!-- Site logo and name -->
       <div class="logo-container">
-        <img src="assets/images/logo.svg" alt="Site logo" class="site-logo">
+        <img src="assets/images/dashboardicon1v2.png" alt="Site logo" class="site-logo">
         <span class="site-name" *ngIf="sidenavOpen">Your CMS</span>
       </div>
       
       <!-- Navigation items -->
       <mat-nav-list>
         <a mat-list-item routerLink="/admin" routerLinkActive="active">
-          <mat-icon matListIcon>dashboard</mat-icon>
+          <img src="assets/images/dashboardicon1v2.png" alt="Dashboard icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Dashboard</span>
         </a>
         
         <h3 matSubheader *ngIf="sidenavOpen">Content</h3>
         
         <a mat-list-item routerLink="/admin/posts" routerLinkActive="active">
-          <mat-icon matListIcon>article</mat-icon>
+          <img src="assets/images/dashboardicon1v2.png" alt="Posts icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Posts</span>
           <span matBadge="{{dashboardSummary?.draftCount || 0}}" matBadgeSize="small" matBadgeColor="accent" matBadgeOverlap="false" *ngIf="sidenavOpen && dashboardSummary?.draftCount > 0"></span>
         </a>
         
         <a mat-list-item routerLink="/admin/pages" routerLinkActive="active">
-          <mat-icon matListIcon>description</mat-icon>
+          <img src="assets/images/dashboardicon1v2.png" alt="Pages icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Pages</span>
         </a>
         
         <a mat-list-item routerLink="/admin/comments" routerLinkActive="active">
-          <mat-icon matListIcon [matBadge]="dashboardSummary?.pendingCommentCount || 0" [matBadgeHidden]="!dashboardSummary?.pendingCommentCount" matBadgeColor="warn">comment</mat-icon>
+          <img src="assets/images/dashboardicon1v2.png" alt="Comments icon" class="nav-list-icon comments-nav-icon">
           <span *ngIf="sidenavOpen">Comments</span>
         </a>
         
         <a mat-list-item routerLink="/admin/media" routerLinkActive="active">
-          <mat-icon matListIcon>perm_media</mat-icon>
+          <img src="assets/images/dashboardicon1v2.png" alt="Media icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Media</span>
         </a>
         
         <h3 matSubheader *ngIf="sidenavOpen">Taxonomy</h3>
         
         <a mat-list-item routerLink="/admin/categories" routerLinkActive="active">
-          <mat-icon matListIcon>category</mat-icon>
+          <img src="assets/images/dashboardicon1v2.png" alt="Categories icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Categories</span>
         </a>
         
         <a mat-list-item routerLink="/admin/tags" routerLinkActive="active">
-          <mat-icon matListIcon>local_offer</mat-icon>
+          <img src="assets/images/dashboardicon1v2.png" alt="Tags icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Tags</span>
         </a>
         
         <h3 matSubheader *ngIf="sidenavOpen">Settings</h3>
         
         <a mat-list-item routerLink="/admin/users" routerLinkActive="active">
-          <mat-icon matListIcon>people</mat-icon>
+          <img src="assets/images/dashboardicon1v2.png" alt="Users icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Users</span>
         </a>
         
         <a mat-list-item routerLink="/admin/settings" routerLinkActive="active">
-          <mat-icon matListIcon>settings</mat-icon>
+          <img src="assets/images/dashboardicon1v2.png" alt="Settings icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Settings</span>
         </a>
       </mat-nav-list>
-      
-      <!-- Collapse/expand button -->
-      <div class="sidenav-footer">
-        <button mat-icon-button (click)="toggleSidenav()" class="collapse-btn">
-          <mat-icon>{{ sidenavOpen ? 'chevron_left' : 'chevron_right' }}</mat-icon>
-        </button>
-      </div>
     </mat-sidenav>
 
-    <mat-sidenav-content>
+    <mat-sidenav-content class="admin-main-content">
       <!-- Top toolbar -->
       <mat-toolbar color="primary" class="admin-toolbar">
         <span class="page-title">Dashboard</span>
@@ -79,33 +72,40 @@
         <span class="spacer"></span>
         
         <div class="toolbar-actions">
+          <button mat-icon-button (click)="toggleSidenav()" class="collapse-btn" matTooltip="Toggle navigation">
+            <mat-icon>
+              <img *ngIf="sidenavOpen" src="assets/images/chevron-sign-left.png" alt="Collapse menu" class="toolbar-img-icon">
+              <img *ngIf="!sidenavOpen" src="assets/images/chevron-sign-to-right.png" alt="Expand menu" class="toolbar-img-icon">
+            </mat-icon>
+          </button>
+          
           <!-- Refresh button -->
           <button mat-icon-button (click)="refreshData()" matTooltip="Refresh data">
-            <mat-icon>refresh</mat-icon>
+            <img src="assets/images/refresh-icon-10846.png" alt="Refresh data" class="toolbar-img-icon">
           </button>
           
           <!-- Add new content button -->
           <button mat-icon-button [matMenuTriggerFor]="addMenu" matTooltip="Add new content">
-            <mat-icon>add</mat-icon>
+            <img src="assets/images/addicon.png" alt="Add new content" class="toolbar-img-icon">
           </button>
           <mat-menu #addMenu="matMenu">
             <a mat-menu-item routerLink="/admin/posts/new">
-              <mat-icon>post_add</mat-icon>
+              <img src="assets/images/dashboardicon1v2.png" alt="New post" class="toolbar-img-icon">
               <span>New Post</span>
             </a>
             <a mat-menu-item routerLink="/admin/pages/new">
-              <mat-icon>note_add</mat-icon>
+              <img src="assets/images/dashboardicon1v2.png" alt="New page" class="toolbar-img-icon">
               <span>New Page</span>
             </a>
             <a mat-menu-item routerLink="/admin/media">
-              <mat-icon>add_photo_alternate</mat-icon>
+              <img src="assets/images/dashboardicon1v2.png" alt="Add media" class="toolbar-img-icon">
               <span>Add Media</span>
             </a>
           </mat-menu>
           
           <!-- View site button -->
           <a mat-icon-button href="/" target="_blank" matTooltip="View site">
-            <mat-icon>public</mat-icon>
+            <img src="assets/images/visitwebsite1.png" alt="View site" class="toolbar-img-icon">
           </a>
           
           <!-- User menu -->
@@ -147,7 +147,7 @@
       <div *ngIf="error && !loading" class="error-container">
         <mat-card>
           <mat-card-content>
-            <mat-icon>error_outline</mat-icon>
+            <mat-icon><img src="assets/images/errordefault.png" alt="Error Icon" class="toolbar-img-icon"></mat-icon>
             <h3>Error Loading Dashboard</h3>
             <p>There was a problem loading the dashboard data. Please try again.</p>
             <button mat-raised-button color="primary" (click)="refreshData()">Retry</button>
@@ -224,7 +224,7 @@
         <div class="dashboard-charts">
           <mat-card class="chart-card">
             <mat-card-header>
-              <mat-card-title>Site Traffic</mat-card-title>
+              <mat-card-title class="card-title-with-icon"><mat-icon>show_chart</mat-icon> Site Traffic</mat-card-title>
               <div class="chart-actions">
                 <button mat-button [matMenuTriggerFor]="periodMenu">
                   {{ currentPeriodLabel }}
@@ -254,7 +254,7 @@
           <div class="recent-activity-section">
             <mat-card>
               <mat-card-header>
-                <mat-card-title>Recent Activity</mat-card-title>
+                <mat-card-title class="card-title-with-icon"><mat-icon>history</mat-icon> Recent Activity</mat-card-title>
               </mat-card-header>
               
               <mat-card-content>
@@ -267,7 +267,7 @@
           <div class="quick-actions-section">
             <mat-card>
               <mat-card-header>
-                <mat-card-title>Quick Actions</mat-card-title>
+                <mat-card-title class="card-title-with-icon"><mat-icon>bolt</mat-icon> Quick Actions</mat-card-title>
               </mat-card-header>
               
               <mat-card-content>
@@ -282,7 +282,7 @@
           <!-- Draft posts -->
           <mat-card class="recent-drafts-card">
             <mat-card-header>
-              <mat-card-title>Recent Drafts</mat-card-title>
+              <mat-card-title class="card-title-with-icon"><mat-icon>edit_note</mat-icon> Recent Drafts</mat-card-title>
             </mat-card-header>
             
             <mat-card-content>
@@ -308,7 +308,7 @@
           <!-- Recent comments -->
           <mat-card class="recent-comments-card">
             <mat-card-header>
-              <mat-card-title>Recent Comments</mat-card-title>
+              <mat-card-title class="card-title-with-icon"><mat-icon>forum</mat-icon> Recent Comments</mat-card-title>
             </mat-card-header>
             
             <mat-card-content>
@@ -340,7 +340,7 @@
         <div class="system-status-section" *ngIf="systemStatus">
           <mat-card>
             <mat-card-header>
-              <mat-card-title>System Status</mat-card-title>
+              <mat-card-title class="card-title-with-icon"><mat-icon>settings_system_daydream</mat-icon> System Status</mat-card-title>
             </mat-card-header>
             
             <mat-card-content>

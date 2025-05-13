@@ -1,7 +1,25 @@
+/* Variables for dark theme */
+:host {
+  --background-color: #2c2c2c;
+  --text-color: #f0f0f0;
+  --primary-color: #00acc1;
+  --card-background-color: #2c2c2c; /* Same as page bg for a flatter look */
+  --card-border-color: #444;
+  --secondary-text-color: #ccc;
+  --heading-color: var(--text-color);
+  --link-color: var(--primary-color);
+  --link-hover-color: #007a8a;
+  --code-background: #1e1e1e;
+  --blockquote-border: var(--primary-color);
+}
+
 .post-detail-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0px 0px 0px 0px; /* Increased top padding */
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
     
     .loading-container, .error-container {
       display: flex;
@@ -12,6 +30,9 @@
       mat-card {
         max-width: 500px;
         text-align: center;
+        background-color: var(--card-background-color);
+        border: 1px solid var(--card-border-color);
+        color: var(--text-color);
         
         h2 {
           margin-top: 0;
@@ -25,6 +46,10 @@
       gap: 30px;
       
       .post-card {
+        background-color: var(--card-background-color);
+        border: 1px solid var(--card-border-color);
+        border-radius: 8px;
+        
         .featured-image {
           max-height: 500px;
           object-fit: cover;
@@ -37,14 +62,14 @@
           mat-card-title {
             font-size: 2rem;
             margin-bottom: 10px;
-            color: #333;
+            color: var(--heading-color);
           }
           
           .post-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            color: #666;
+            color: var(--secondary-text-color);
             font-size: 0.9rem;
             
             .author, .date {
@@ -59,24 +84,27 @@
           
           mat-chip {
             cursor: pointer;
+            background-color: #3a3a3a;
+            color: var(--text-color);
           }
         }
         
         .post-content {
           font-size: 1.1rem;
           line-height: 1.7;
-          color: #333;
+          color: var(--text-color);
           margin-bottom: 30px;
           
           ::ng-deep {
             h1, h2, h3, h4, h5, h6 {
               margin-top: 1.5em;
               margin-bottom: 0.5em;
-              color: #222;
+              color: var(--heading-color);
             }
             
             p {
               margin-bottom: 1.5em;
+              color: var(--text-color);
             }
             
             img {
@@ -87,11 +115,12 @@
             }
             
             blockquote {
-              border-left: 4px solid #3f51b5;
+              border-left: 4px solid var(--blockquote-border);
               padding-left: 20px;
               margin-left: 0;
-              color: #555;
+              color: var(--secondary-text-color);
               font-style: italic;
+              background-color: rgba(0,0,0,0.1);
             }
             
             ul, ol {
@@ -104,7 +133,7 @@
             }
             
             pre {
-              background-color: #f5f5f5;
+              background-color: var(--code-background);
               padding: 15px;
               border-radius: 4px;
               overflow-x: auto;
@@ -112,18 +141,20 @@
             }
             
             code {
-              background-color: #f5f5f5;
+              background-color: var(--code-background);
               padding: 2px 5px;
               border-radius: 3px;
               font-family: monospace;
+              color: #d4d4d4;
             }
             
             a {
-              color: #3f51b5;
+              color: var(--link-color);
               text-decoration: none;
               
               &:hover {
                 text-decoration: underline;
+                color: var(--link-hover-color);
               }
             }
             
@@ -133,17 +164,18 @@
               margin: 1em 0;
               
               th, td {
-                border: 1px solid #ddd;
+                border: 1px solid var(--card-border-color);
                 padding: 8px;
               }
               
               th {
-                background-color: #f2f2f2;
+                background-color: #3a3a3a;
                 text-align: left;
+                color: var(--text-color);
               }
               
               tr:nth-child(even) {
-                background-color: #f9f9f9;
+                background-color: #333;
               }
             }
           }
@@ -155,25 +187,59 @@
           h3 {
             margin-bottom: 10px;
             font-size: 1.2rem;
+            color: var(--heading-color);
           }
           
           mat-chip {
             cursor: pointer;
+            background-color: #3a3a3a;
+            color: var(--text-color);
           }
         }
         
         .social-sharing {
           margin-top: 30px;
           padding-top: 20px;
-          border-top: 1px solid #eee;
+          border-top: 1px solid var(--card-border-color);
           
           h3 {
             margin-bottom: 15px;
             font-size: 1.2rem;
+            color: var(--heading-color);
           }
           
           button {
             margin-right: 10px;
+          }
+        }
+        
+        mat-card-actions {
+          button.back-button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-color);
+            
+            mat-icon {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              
+              img.toolbar-img-icon {
+                width: 16px;
+                height: 16px;
+                object-fit: contain;
+              }
+            }
+            
+            span {
+              font-size: 14px;
+              font-weight: 500;
+            }
+            
+            &:hover {
+              color: var(--primary-color);
+            }
           }
         }
       }
@@ -182,7 +248,7 @@
         h2 {
           margin-bottom: 20px;
           font-size: 1.5rem;
-          color: #333;
+          color: var(--heading-color);
         }
         
         .related-posts-grid {
@@ -194,6 +260,9 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            background-color: var(--card-background-color);
+            border: 1px solid var(--card-border-color);
+            border-radius: 8px;
             
             .related-post-image {
               height: 180px;
@@ -204,11 +273,11 @@
               font-size: 1.2rem;
               
               a {
-                color: #333;
+                color: var(--text-color);
                 text-decoration: none;
                 
                 &:hover {
-                  color: #3f51b5;
+                  color: var(--link-color);
                 }
               }
             }
@@ -230,6 +299,21 @@
           mat-card-header {
             mat-card-title {
               font-size: 1.5rem;
+            }
+          }
+          
+          mat-card-actions {
+            button.back-button {
+              mat-icon {
+                img.toolbar-img-icon {
+                  width: 14px;
+                  height: 14px;
+                }
+              }
+              
+              span {
+                font-size: 13px;
+              }
             }
           }
         }

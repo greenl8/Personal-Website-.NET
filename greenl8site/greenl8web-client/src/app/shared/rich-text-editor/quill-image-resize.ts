@@ -1,3 +1,4 @@
+import { isPlatformBrowser } from '@angular/common';
 import Quill from 'quill';
 
 // Placeholder for window type
@@ -7,56 +8,65 @@ export class ImageResize {
   quill: any;
   options: any;
   currentImage: any;
-  overlay: HTMLElement;
+  overlay: HTMLElement | null = null; // Initialize as null
   handles: HTMLElement[];
+  private platformId: Object; // To be injected or passed
   
-  constructor(quill: any, options: any = {}) {
+  constructor(quill: any, options: any = {}, platformId?: Object) {
     this.quill = quill;
     this.options = options;
     this.currentImage = null;
     this.handles = [];
+    this.platformId = platformId || (typeof window !== 'undefined' ? window.document : {}); // Basic fallback
     
-    // Create overlay
-    this.overlay = document.createElement('div');
-    this.overlay.classList.add('image-resizer');
-    this.overlay.style.display = 'none';
-    
-    // Create resize handles
-    this.addResizeHandles();
-    
-    // Append to editor
-    this.quill.root.parentNode.appendChild(this.overlay);
-    
-    // Listen for selection change and check if image
-    this.quill.on('selection-change', this.checkSelection.bind(this));
-    
-    // Listen for image click
-    this.quill.root.addEventListener('click', this.checkImage.bind(this));
-    
-    // Hide overlay on scroll
-    this.quill.root.addEventListener('scroll', () => {
-      this.hideOverlay();
-    });
-    
-    // Hide overlay on editor blur
-    this.quill.root.addEventListener('blur', () => {
-      this.hideOverlay();
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      // Create overlay
+      this.overlay = document.createElement('div');
+      this.overlay.classList.add('image-resizer');
+      this.overlay.style.display = 'none';
+      
+      // Create resize handles
+      this.addResizeHandles();
+      
+      // Append to editor
+      if (this.quill.root && this.quill.root.parentNode) {
+        this.quill.root.parentNode.appendChild(this.overlay);
+      }
+      
+      // Listen for selection change and check if image
+      this.quill.on('selection-change', this.checkSelection.bind(this));
+      
+      // Listen for image click
+      this.quill.root.addEventListener('click', this.checkImage.bind(this));
+      
+      // Hide overlay on scroll
+      this.quill.root.addEventListener('scroll', () => {
+        this.hideOverlay();
+      });
+      
+      // Hide overlay on editor blur
+      this.quill.root.addEventListener('blur', () => {
+        this.hideOverlay();
+      });
+    }
   }
   
   addResizeHandles(): void {
+    if (!isPlatformBrowser(this.platformId) || !this.overlay) return;
+    
     const positions = ['se', 'ne', 'sw', 'nw'];
     
     positions.forEach(position => {
       const handle = document.createElement('div');
       handle.classList.add('resize-handle', `resize-handle-${position}`);
       handle.addEventListener('mousedown', this.handleMousedown.bind(this, position));
-      this.overlay.appendChild(handle);
+      this.overlay!.appendChild(handle); // Use non-null assertion operator
       this.handles.push(handle);
     });
   }
   
   checkSelection(range: any): void {
+    if (!isPlatformBrowser(this.platformId)) return;
     if (!range) return;
     
     const [blot, offset] = this.quill.getLeaf(range.index);
@@ -69,36 +79,42 @@ export class ImageResize {
   }
   
   checkImage(event: MouseEvent): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    
     const element = event.target as HTMLElement;
     
     if (element && element.tagName === 'IMG') {
       this.showOverlay(element);
-    } else if (element && !this.overlay.contains(element)) {
+    } else if (this.overlay && element && !this.overlay.contains(element)) { // Check if overlay exists
       this.hideOverlay();
     }
   }
   
   showOverlay(image: HTMLElement): void {
+    if (!isPlatformBrowser(this.platformId) || !this.overlay) return;
+    
     this.currentImage = image;
     
     // Position overlay over image
     const rect = image.getBoundingClientRect();
     const containerRect = this.quill.root.parentNode.getBoundingClientRect();
     
-    this.overlay.style.left = `${rect.left - containerRect.left}px`;
-    this.overlay.style.top = `${rect.top - containerRect.top}px`;
-    this.overlay.style.width = `${rect.width}px`;
-    this.overlay.style.height = `${rect.height}px`;
-    this.overlay.style.display = 'block';
+    this.overlay!.style.left = `${rect.left - containerRect.left}px`;
+    this.overlay!.style.top = `${rect.top - containerRect.top}px`;
+    this.overlay!.style.width = `${rect.width}px`;
+    this.overlay!.style.height = `${rect.height}px`;
+    this.overlay!.style.display = 'block';
   }
   
   hideOverlay(): void {
-    this.overlay.style.display = 'none';
+    if (!isPlatformBrowser(this.platformId) || !this.overlay) return;
+    
+    this.overlay!.style.display = 'none';
     this.currentImage = null;
   }
   
   handleMousedown(position: string, event: MouseEvent): void {
-    if (!this.currentImage) return;
+    if (!isPlatformBrowser(this.platformId) || !this.currentImage) return;
     
     event.preventDefault();
     event.stopPropagation();
@@ -156,8 +172,8 @@ export class ImageResize {
   }
 }
 
-// Register as Quill module
-if (window && window.Quill) {
+// Register as Quill module - only in browser
+if (typeof window !== 'undefined' && window.Quill && isPlatformBrowser(window.document)) {
   window.Quill.register('modules/imageResize', ImageResize);
 }
 

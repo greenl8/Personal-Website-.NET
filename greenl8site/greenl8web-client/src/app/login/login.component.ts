@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
   ) {
     // Redirect if already logged in
     if (this.authService.currentUser$) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/admin/dashboard']);
     }
   }
   

@@ -50,17 +50,6 @@ $transition-duration: 0.3s;
       white-space: nowrap;
     }
   }
-  
-  .sidenav-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 8px 0;
-    display: flex;
-    justify-content: center;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    background-color: white;
-  }
 }
 
 // When sidenav is collapsed
@@ -94,6 +83,14 @@ $transition-duration: 0.3s;
   .toolbar-actions {
     display: flex;
     align-items: center;
+    
+    .collapse-btn {
+      mat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
   }
   
   .user-button {
@@ -130,5 +127,83 @@ $transition-duration: 0.3s;
       justify-content: center;
       font: 14px Arial, sans-serif;
     }
+  }
 }
+
+// Styles for content visibility
+.admin-main-content {
+  background-color: $background-color;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  
+  mat-card {
+    padding: 20px;
+    text-align: center;
+    
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: $warn-color;
+    }
+    
+    h3 {
+      margin-top: 16px;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    p {
+      color: #555;
+    }
+  }
+}
+
+.dashboard-content {
+  position: relative;
+  z-index: 1;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.card-title-with-icon {
+  display: flex;
+  align-items: center;
+  
+  mat-icon {
+    margin-right: 8px; // Space between icon and title text
+  }
+}
+
+.nav-list-icon {
+  width: 24px;       // Standard Material icon size
+  height: 24px;      // Standard Material icon size
+  margin-right: 16px; // Matches typical spacing for matListIcon
+  vertical-align: middle; // Helps align with text
+}
+
+.toolbar-img-icon {
+  width: 20px;  // Slightly smaller than standard for better appearance
+  height: 20px; // Keep it square
+  display: block; // Helps with layout inside button
+  object-fit: contain; // Ensures the image fits within the dimensions
 }

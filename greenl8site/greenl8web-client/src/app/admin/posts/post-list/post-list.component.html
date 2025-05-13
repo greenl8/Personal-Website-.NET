@@ -2,7 +2,7 @@
     <div class="header-actions">
       <h1>Posts</h1>
       <button mat-raised-button color="primary" routerLink="/admin/posts/new">
-        <mat-icon>add</mat-icon> New Post
+        <mat-icon><img src="assets/images/addicon.png" alt="Add icon" class="toolbar-img-icon"></mat-icon> New Post
       </button>
     </div>
     
@@ -11,7 +11,7 @@
         <mat-form-field class="search-field">
           <mat-label>Search posts</mat-label>
           <input matInput (keyup)="applyFilter($event)" placeholder="Search by title or content">
-          <mat-icon matSuffix>search</mat-icon>
+          <mat-icon matSuffix><img src="assets/images/search-icon.png" alt="Search icon" class="toolbar-img-icon"></mat-icon>
         </mat-form-field>
         
         <div class="loading-container" *ngIf="loading">
@@ -60,17 +60,18 @@
               <th mat-header-cell *matHeaderCellDef>Actions</th>
               <td mat-cell *matCellDef="let post">
                 <button mat-icon-button [routerLink]="['/post', post.slug]" matTooltip="View">
-                  <mat-icon>visibility</mat-icon>
+                  <mat-icon><img src="assets/images/visitwebsite1.png" alt="View icon" class="toolbar-img-icon"></mat-icon>
                 </button>
                 <button mat-icon-button [routerLink]="['/admin/posts/edit', post.id]" matTooltip="Edit">
-                  <mat-icon>edit</mat-icon>
+                  <mat-icon><img src="assets/images/edit-icon.png" alt="Edit icon" class="toolbar-img-icon"></mat-icon>
                 </button>
                 <button mat-icon-button (click)="changePostStatus(post)" 
                         [matTooltip]="post.isPublished ? 'Unpublish' : 'Publish'">
-                  <mat-icon>{{ post.isPublished ? 'unpublished' : 'publish' }}</mat-icon>
+                  <mat-icon><img [src]="post.isPublished ? 'assets/images/unpublishicon.png' : 'assets/images/publishicon.png'" 
+                           [alt]="post.isPublished ? 'Unpublish icon' : 'Publish icon'" class="toolbar-img-icon"></mat-icon>
                 </button>
                 <button mat-icon-button (click)="deletePost(post)" matTooltip="Delete">
-                  <mat-icon>delete</mat-icon>
+                  <mat-icon><img src="assets/images/delete-icon.png" alt="Delete icon" class="toolbar-img-icon"></mat-icon>
                 </button>
               </td>
             </ng-container>
