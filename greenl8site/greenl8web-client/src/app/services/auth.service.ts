@@ -24,8 +24,9 @@ export class AuthService {
   }
   
   login(username: string, password: string): Observable<User> {
-    return this.http.post<User>(this.baseUrl + '/login', { username, password })
+    return this.http.post<any>(this.baseUrl + '/login', { username, password })
       .pipe(
+        map(rawUser => this.normalizeUser(rawUser)),
         tap(user => {
           if (user && isPlatformBrowser(this.platformId)) {
             localStorage.setItem('user', JSON.stringify(user));
@@ -47,8 +48,9 @@ export class AuthService {
       return of(this.currentUserSource.value);
     }
     
-    return this.http.get<User>(this.baseUrl + '/current')
+    return this.http.get<any>(this.baseUrl + '/current')
       .pipe(
+        map(rawUser => this.normalizeUser(rawUser)),
         tap(user => {
           if (user && isPlatformBrowser(this.platformId)) {
             localStorage.setItem('user', JSON.stringify(user));
@@ -66,9 +68,28 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       const userJson = localStorage.getItem('user');
       if (userJson) {
-        const user: User = JSON.parse(userJson);
+        const rawUser = JSON.parse(userJson);
+        const user = this.normalizeUser(rawUser);
         this.currentUserSource.next(user);
       }
     }
+  }
+  
+  /**
+   * Normalize the user object coming from the backend or localStorage.
+   * Ensures the JWT property is always available as `token` (camelCase)
+   * regardless of whether the backend serialized it as `token` or `Token`.
+   */
+  private normalizeUser(rawUser: any): User {
+    if (!rawUser) {
+      return rawUser;
+    }
+
+    // Map Token -> token if necessary
+    if (!rawUser.token && rawUser.Token) {
+      rawUser.token = rawUser.Token;
+    }
+
+    return rawUser as User;
   }
 }

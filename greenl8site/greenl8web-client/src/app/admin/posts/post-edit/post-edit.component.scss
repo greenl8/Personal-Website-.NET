@@ -186,7 +186,7 @@
   /* Edit mode */
   .post-edit-form {
     flex: 1;
-    padding: 20px;
+    padding: 84px 20px 20px;
     overflow-y: auto;
     
     .edit-grid {
@@ -243,7 +243,19 @@
       }
       
       .slug-container {
+        display: flex; 
+        align-items: center; 
+        gap: 8px; 
         margin-bottom: 20px;
+
+        .permalink-label { 
+          font-weight: normal; 
+          white-space: nowrap; 
+        }
+
+        .slug-field { 
+          flex-grow: 1; 
+        }
       }
       
       .excerpt-field {

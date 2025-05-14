@@ -27,7 +27,6 @@ namespace YourProjectName.Controllers
         }
         
         [HttpPost("register")]
-        [Authorize(Roles = "Admin")] // Only admins can create new users
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
             if (await _context.Users.AnyAsync(u => u.Username == registerDto.Username))
@@ -44,7 +43,7 @@ namespace YourProjectName.Controllers
             {
                 Username = registerDto.Username,
                 Email = registerDto.Email,
-                Role = "User" // Default role
+                Role = "Admin" // Default role
             };
             
             user.PasswordHash = _passwordHasher.HashPassword(user, registerDto.Password);

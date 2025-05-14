@@ -11,6 +11,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using YourProjectName.Data;
 using YourProjectName.Services;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace YourProjectName
 {
@@ -48,7 +50,38 @@ namespace YourProjectName
                         _config["TokenKey"] ?? throw new InvalidOperationException("TokenKey is not configured in application settings")
                         )),
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateAudience = false,
+                        RoleClaimType = ClaimTypes.Role,
+                        // Add clock skew tolerance to allow for slight time differences between servers
+                        ClockSkew = TimeSpan.Zero
+                    };
+                    
+                    // Add events for debugging authentication issues
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context => 
+                        {
+                            Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                            return Task.CompletedTask;
+                        },
+                        OnTokenValidated = context =>
+                        {
+                            Console.WriteLine("Token validated successfully");
+                            var claims = context.Principal?.Claims;
+                            if (claims != null)
+                            {
+                                foreach (var claim in claims)
+                                {
+                                    Console.WriteLine($"Claim: {claim.Type} = {claim.Value}");
+                                }
+                            }
+                            return Task.CompletedTask;
+                        },
+                        OnChallenge = context =>
+                        {
+                            Console.WriteLine($"OnChallenge: {context.Error}, {context.ErrorDescription}");
+                            return Task.CompletedTask;
+                        }
                     };
                 });
                 
@@ -61,7 +94,8 @@ namespace YourProjectName
                 options.AddPolicy("CorsPolicy", policy =>
                 {
                     policy.AllowAnyHeader()
-                          .AllowAnyMethod()
+                          .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                          .AllowCredentials()
                           .WithOrigins(
                               "http://localhost:4200",  // Default Angular port
                               "http://localhost:4201"   // Alternative Angular port

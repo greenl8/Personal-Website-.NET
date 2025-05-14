@@ -110,16 +110,8 @@ export class PostListComponent implements OnInit {
   }
   
   changePostStatus(post: PostListItem): void {
-    const updatedPost = {
-      title: post.title,
-      content: '', // Will be provided by the API
-      slug: post.slug,
-      isPublished: !post.isPublished,
-      categoryIds: [],
-      tagIds: []
-    };
-    
-    this.postService.updatePost(post.id, updatedPost).subscribe(
+    // Use the dedicated endpoint for toggling publish status
+    this.postService.togglePublishStatus(post.id).subscribe(
       () => {
         this.snackBar.open(`Post ${post.isPublished ? 'unpublished' : 'published'} successfully`, 'Close', { duration: 3000 });
         this.loadPosts();

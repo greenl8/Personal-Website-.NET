@@ -56,4 +56,8 @@ export class PostService {
   deletePost(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+  
+  togglePublishStatus(id: number): Observable<Post> {
+    return this.http.patch<Post>(`${this.baseUrl}/${id}/toggle-publish`, {});
+  }
 }

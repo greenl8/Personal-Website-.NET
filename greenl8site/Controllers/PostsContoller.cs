@@ -336,5 +336,34 @@ namespace YourProjectName.Controllers
             
             return NoContent();
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/toggle-publish")]
+        public async Task<ActionResult<PostDto>> TogglePublishStatus(int id)
+        {
+            var post = await _context.Posts
+                .SingleOrDefaultAsync(p => p.Id == id);
+                
+            if (post == null)
+            {
+                return NotFound();
+            }
+            
+            // Toggle the published status
+            post.IsPublished = !post.IsPublished;
+            
+            // Update PublishedAt date if being published for the first time
+            if (post.IsPublished && !post.PublishedAt.HasValue)
+            {
+                post.PublishedAt = DateTime.UtcNow;
+            }
+            
+            post.UpdatedAt = DateTime.UtcNow;
+            
+            await _context.SaveChangesAsync();
+            
+            // Return the updated post
+            return await GetPost(id);
+        }
     }
 }

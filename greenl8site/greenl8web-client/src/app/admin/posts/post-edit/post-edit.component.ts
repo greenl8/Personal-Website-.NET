@@ -248,6 +248,11 @@ export class PostEditComponent implements OnInit {
       return;
     }
     
+    // Auto-generate slug if field left empty
+    if (!this.postForm.get('slug').value) {
+      this.generateSlug();
+    }
+    
     this.submitting = true;
     const postData = {
       ...this.postForm.value,

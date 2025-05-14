@@ -7,7 +7,7 @@
     <!-- Action buttons -->
     <div class="action-buttons">
       <button mat-button [matMenuTriggerFor]="moreMenu" aria-label="More options">
-        <mat-icon><img src="assets/images/more-icon.png" alt="More options" class="toolbar-img-icon"></mat-icon>
+        <mat-icon><img src="assets/images/addicon.png" alt="More options" class="toolbar-img-icon"></mat-icon>
       </button>
       <mat-menu #moreMenu="matMenu">
         <button mat-menu-item (click)="onPreview()">
@@ -24,13 +24,13 @@
           <span>Duplicate</span>
         </button>
         <button mat-menu-item (click)="onDelete()" [disabled]="!isEditing" color="warn">
-          <mat-icon><img src="assets/images/delete-icon.png" alt="Delete" class="toolbar-img-icon"></mat-icon>
+          <mat-icon><img src="assets/images/errordefault.png" alt="Delete" class="toolbar-img-icon"></mat-icon>
           <span>Delete</span>
         </button>
       </mat-menu>
       
       <button mat-stroked-button (click)="onCancel()">
-        <mat-icon><img src="assets/images/cancel-icon.png" alt="Cancel" class="toolbar-img-icon"></mat-icon>
+        <mat-icon><img src="assets/images/delete-icon.png" alt="Cancel" class="toolbar-img-icon"></mat-icon>
         Cancel
       </button>
       
@@ -125,8 +125,9 @@
 
             <!-- Slug -->
             <div class="slug-container">
+              <span class="permalink-label">Permalink:</span>
               <mat-form-field appearance="outline" class="slug-field">
-                <mat-label>Permalink</mat-label>
+                
                 <span matPrefix>{{ baseUrl }}/</span>
                 <input matInput formControlName="slug">
                 <button mat-icon-button matSuffix (click)="generateSlug()" matTooltip="Generate from title" type="button">
