@@ -6,6 +6,14 @@ import { PageListItem } from '../../../models/page.model';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { MatIcon } from '@angular/material/icon';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { NgIf } from '@angular/common';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatChipListbox, MatChip } from '@angular/material/chips';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-page-list',
@@ -13,9 +21,30 @@ import { MatCard, MatCardContent } from '@angular/material/card';
   styleUrls: ['./page-list.component.scss']
 
     , standalone: true,
-    imports: [ MatIcon,
+    imports: [ 
+        MatIcon,
         MatCard,
-        MatCardContent]
+        MatCardContent,
+        NgIf,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+        MatProgressSpinner,
+        MatChipListbox,
+        MatChip,
+        MatButton,
+        MatIconButton,
+        RouterLink,
+        DatePipe,
+        MatTooltip
+    ]
 })
 export class PageListComponent implements OnInit {
   pages: PageListItem[] = [];

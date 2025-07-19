@@ -128,20 +128,38 @@
 
   mat-card-header {
     padding: 16px;
-    .mat-card-title a {
-      color: var(--text-color);
-      text-decoration: none;
-      font-size: 1.3rem;
-      font-weight: 500;
-      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      
-      &:visited {
-        color: var(--text-color);
-      }
+    
+    mat-card-title, .mat-mdc-card-title {
+      a {
+        color: #ffffff !important; /* Force white color to override any Material styles */
+        text-decoration: none;
+        font-size: 1.3rem;
+        font-weight: 500;
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        
+        &:visited {
+          color: #ffffff !important; /* Ensure visited links are also white */
+        }
 
-      &:hover {
-        color: var(--primary-color);
-        text-decoration: underline;
+        &:hover {
+          color: var(--primary-color) !important; /* Teal color on hover */
+          text-decoration: underline;
+        }
+      }
+    }
+    
+    /* Additional targeting for Angular Material card title */
+    ::ng-deep .mat-mdc-card-title {
+      a {
+        color: #ffffff !important;
+        
+        &:visited {
+          color: #ffffff !important;
+        }
+        
+        &:hover {
+          color: var(--primary-color) !important;
+        }
       }
     }
   }

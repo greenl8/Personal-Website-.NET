@@ -50,7 +50,23 @@ namespace YourProjectName.Services
         
         public string GetFileUrl(string filePath)
         {
-            return $"{_baseUrl}/{filePath.Replace("\\", "/")}";
+            // If it's already a full URL, return as-is
+            if (filePath.StartsWith("http://") || filePath.StartsWith("https://"))
+            {
+                return filePath;
+            }
+            
+            // Normalize path separators
+            var normalizedPath = filePath.Replace("\\", "/");
+            
+            // If the path already starts with "uploads/", don't add it again
+            if (normalizedPath.StartsWith("uploads/"))
+            {
+                return $"{_baseUrl}/{normalizedPath}";
+            }
+            
+            // Otherwise, add the uploads prefix
+            return $"{_baseUrl}/uploads/{normalizedPath}";
         }
         
         public bool DeleteFile(string filePath)

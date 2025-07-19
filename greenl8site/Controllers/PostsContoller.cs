@@ -21,12 +21,14 @@ namespace YourProjectName.Controllers
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly SlugService _slugService;
+        private readonly FileService _fileService;
         
-        public PostsController(AppDbContext context, IMapper mapper, SlugService slugService)
+        public PostsController(AppDbContext context, IMapper mapper, SlugService slugService, FileService fileService)
         {
             _context = context;
             _mapper = mapper;
             _slugService = slugService;
+            _fileService = fileService;
         }
         
         [HttpGet]
@@ -74,6 +76,15 @@ namespace YourProjectName.Controllers
             // Map to DTOs
             var postDtos = _mapper.Map<List<PostListDto>>(posts);
             
+            // Convert featured image paths to full URLs
+            foreach (var postDto in postDtos)
+            {
+                if (!string.IsNullOrEmpty(postDto.FeaturedImage))
+                {
+                    postDto.FeaturedImage = _fileService.GetFileUrl(postDto.FeaturedImage);
+                }
+            }
+            
             // Create paginated result
             var result = new PaginatedResultDto<PostListDto>
             {
@@ -103,7 +114,15 @@ namespace YourProjectName.Controllers
                 return NotFound();
             }
             
-            return _mapper.Map<PostDto>(post);
+            var postDto = _mapper.Map<PostDto>(post);
+            
+            // Convert featured image path to full URL
+            if (!string.IsNullOrEmpty(postDto.FeaturedImage))
+            {
+                postDto.FeaturedImage = _fileService.GetFileUrl(postDto.FeaturedImage);
+            }
+            
+            return postDto;
         }
         
         [HttpGet("by-slug/{slug}")]
@@ -122,7 +141,15 @@ namespace YourProjectName.Controllers
                 return NotFound();
             }
             
-            return _mapper.Map<PostDto>(post);
+            var postDto = _mapper.Map<PostDto>(post);
+            
+            // Convert featured image path to full URL
+            if (!string.IsNullOrEmpty(postDto.FeaturedImage))
+            {
+                postDto.FeaturedImage = _fileService.GetFileUrl(postDto.FeaturedImage);
+            }
+            
+            return postDto;
         }
         
         [Authorize(Roles = "Admin")]
