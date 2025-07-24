@@ -175,6 +175,8 @@ namespace YourProjectName.Controllers
                 Content = postDto.Content,
                 Slug = slug,
                 FeaturedImage = postDto.FeaturedImage,
+                VideoEmbedCode = postDto.VideoEmbedCode,
+                Excerpt = postDto.Excerpt,
                 IsPublished = postDto.IsPublished,
                 AuthorId = userId,
                 CreatedAt = DateTime.UtcNow,
@@ -264,6 +266,8 @@ namespace YourProjectName.Controllers
             post.Content = postDto.Content;
             post.Slug = slug;
             post.FeaturedImage = postDto.FeaturedImage;
+            post.VideoEmbedCode = postDto.VideoEmbedCode;
+            post.Excerpt = postDto.Excerpt;
             post.UpdatedAt = DateTime.UtcNow;
             
             // Update published status if changed

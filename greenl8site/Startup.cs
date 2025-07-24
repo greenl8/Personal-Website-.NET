@@ -98,7 +98,8 @@ namespace YourProjectName
                           .AllowCredentials()
                           .WithOrigins(
                               "http://localhost:4200",  // Default Angular port
-                              "http://localhost:4201"   // Alternative Angular port
+                              "http://localhost:4201",  // Alternative Angular port
+                              "http://192.168.0.81:4200" // Mobile access
                           );
                 });
             });

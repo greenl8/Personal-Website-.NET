@@ -114,6 +114,8 @@ export class PostEditComponent implements OnInit {
       slug: [''],
       excerpt: [''],
       featuredImage: [''],
+      videoEmbedCode: [''],
+      videoUrl: [''], // Raw URL input field
       isPublished: [false],
       categoryIds: [[]],
       tagIds: this.fb.array([]),
@@ -150,6 +152,8 @@ export class PostEditComponent implements OnInit {
             slug: this.post.slug,
             excerpt: this.post.excerpt || '',
             featuredImage: this.post.featuredImage || '',
+            videoEmbedCode: this.post.videoEmbedCode || '',
+            videoUrl: this.extractYouTubeUrlFromEmbed(this.post.videoEmbedCode || ''),
             isPublished: this.post.isPublished,
             categoryIds: this.post.categories?.map(c => c.id) || []
           });
@@ -259,8 +263,22 @@ export class PostEditComponent implements OnInit {
       tagIds: this.tagIdsArray.value
     };
     
-    if (!postData.excerpt) {
-      postData.excerpt = null;
+    // Remove videoUrl as it's only for UI
+    delete postData.videoUrl;
+    
+    // Ensure all string fields are strings, not null
+    postData.excerpt = postData.excerpt || '';
+    postData.featuredImage = postData.featuredImage || '';
+    postData.videoEmbedCode = postData.videoEmbedCode || '';
+    
+    // Ensure slug is never empty (required field)
+    if (!postData.slug || postData.slug.trim() === '') {
+      const title = postData.title || 'untitled';
+      let slug = title.toLowerCase().replace(/\s+/g, '-');
+      slug = slug.replace(/[^a-z0-9-]/g, '');
+      slug = slug.replace(/-+/g, '-');
+      slug = slug.replace(/^-+|-+$/g, '');
+      postData.slug = slug || 'untitled-post';
     }
     
     const saveOperation = this.isEditing 
@@ -307,84 +325,6 @@ export class PostEditComponent implements OnInit {
 
   compareIds(id1: number, id2: number): boolean {
     return id1 === id2;
-  }
-
-  removeImage(): void {
-    this.postForm.patchValue({ featuredImage: '' });
-  }
-
-  loadCategories(): void {
-    this.categoryService.getCategories().subscribe(
-      (categories) => {
-        this.categories = categories || [];
-      },
-      (error) => {
-        console.error('Error loading categories:', error);
-        this.snackBar.open('Error loading categories', 'Close', { duration: 3000 });
-      }
-    );
-  }
-
-  openAddCategoryDialog(): void {
-    const dialogRef = this.dialog.open(AddCategoryDialogComponent, {
-      width: '400px'
-    });
-    
-    dialogRef.afterClosed().subscribe(newCategory => {
-      if (newCategory) {
-        this.categories.push(newCategory);
-        const currentCategoryIds = this.postForm.get('categoryIds').value || [];
-        this.postForm.patchValue({
-          categoryIds: [...currentCategoryIds, newCategory.id]
-        });
-      }
-    });
-  }
-    
-  onPreview(): void {
-    this.previewMode = !this.previewMode;
-  }
-    
-  onSelectFeaturedImage(url: string): void {
-    this.postForm.patchValue({ featuredImage: url });
-  }
-    
-  generateSlug(): void {
-    const title = this.postForm.get('title').value;
-    if (title) {
-      let slug = title.toLowerCase().replace(/\s+/g, '-');
-      slug = slug.replace(/[^a-z0-9-]/g, '');
-      slug = slug.replace(/-+/g, '-');
-      slug = slug.replace(/^-+|-+$/g, '');
-      this.postForm.patchValue({ slug });
-    }
-  }
-    
-  onCancel(): void {
-    if (this.postForm.dirty) {
-      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        width: '400px',
-        data: {
-          title: 'Discard Changes',
-          message: 'You have unsaved changes. Are you sure you want to discard them?',
-          confirmButtonText: 'Discard'
-        }
-      });
-      
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.router.navigate(['/admin/posts']);
-        }
-      });
-    } else {
-      this.router.navigate(['/admin/posts']);
-    }
-  }
-    
-  openMediaSelector(): void {
-    if (this.mediaSelector) {
-        this.mediaSelector.open();
-    }
   }
 
   addTag(event: MatChipInputEvent): void {
@@ -453,4 +393,167 @@ export class PostEditComponent implements OnInit {
     return this.getTagNameById(tagId);
   }
 
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe(
+      (categories) => {
+        this.categories = categories || [];
+      },
+      (error) => {
+        console.error('Error loading categories:', error);
+        this.snackBar.open('Error loading categories', 'Close', { duration: 3000 });
+      }
+    );
+  }
+
+  openAddCategoryDialog(): void {
+    const dialogRef = this.dialog.open(AddCategoryDialogComponent, {
+      width: '400px'
+    });
+    
+    dialogRef.afterClosed().subscribe(newCategory => {
+      if (newCategory) {
+        this.categories.push(newCategory);
+        const currentCategoryIds = this.postForm.get('categoryIds').value || [];
+        this.postForm.patchValue({
+          categoryIds: [...currentCategoryIds, newCategory.id]
+        });
+      }
+    });
+  }
+    
+  onPreview(): void {
+    this.previewMode = !this.previewMode;
+  }
+    
+  generateSlug(): void {
+    const title = this.postForm.get('title').value;
+    if (title) {
+      let slug = title.toLowerCase().replace(/\s+/g, '-');
+      slug = slug.replace(/[^a-z0-9-]/g, '');
+      slug = slug.replace(/-+/g, '-');
+      slug = slug.replace(/^-+|-+$/g, '');
+      this.postForm.patchValue({ slug });
+    }
+  }
+    
+  onCancel(): void {
+    if (this.postForm.dirty) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        data: {
+          title: 'Discard Changes',
+          message: 'You have unsaved changes. Are you sure you want to discard them?',
+          confirmButtonText: 'Discard'
+        }
+      });
+      
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.router.navigate(['/admin/posts']);
+        }
+      });
+    } else {
+      this.router.navigate(['/admin/posts']);
+    }
+  }
+    
+  openMediaSelector(): void {
+    if (this.mediaSelector) {
+        this.mediaSelector.open();
+    }
+  }
+
+  // Video embedding methods
+  convertYouTubeUrl(url: string): string {
+    if (!url || !url.trim()) return '';
+    
+    const trimmedUrl = url.trim();
+    
+    // If it's already an iframe embed code, return as-is
+    if (trimmedUrl.includes('<iframe') && trimmedUrl.includes('youtube.com/embed')) {
+      return trimmedUrl;
+    }
+    
+    // Extract video ID from various YouTube URL formats
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+      /youtube\.com\/v\/([^&\n?#]+)/,
+      /youtube\.com\/.*[?&]v=([^&\n?#]+)/
+    ];
+    
+    let videoId = null;
+    for (const pattern of patterns) {
+      const match = trimmedUrl.match(pattern);
+      if (match && match[1]) {
+        videoId = match[1];
+        break;
+      }
+    }
+    
+    if (videoId) {
+      // Enhanced YouTube embed URL with HD quality parameters
+      const embedUrl = `https://www.youtube.com/embed/${videoId}?hd=1&vq=hd1080&quality=hd1080&rel=0&modestbranding=1&iv_load_policy=3`;
+      return `<iframe width="1920" height="1080" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+    }
+    
+    // If it's not a YouTube URL but looks like HTML, return as-is (custom embed code)
+    if (trimmedUrl.includes('<') && trimmedUrl.includes('>')) {
+      return trimmedUrl;
+    }
+    
+    return ''; // Return empty if we can't process it
+  }
+
+  onVideoUrlChange(url: string): void {
+    // Update the raw URL field
+    this.postForm.patchValue({ videoUrl: url }, { emitEvent: false });
+    
+    // Convert to embed code
+    const embedCode = this.convertYouTubeUrl(url);
+    this.postForm.patchValue({ videoEmbedCode: embedCode }, { emitEvent: false });
+    
+    // Clear featured image when video is set
+    if (embedCode.trim()) {
+      this.postForm.patchValue({ featuredImage: '' }, { emitEvent: false });
+    }
+  }
+
+  onSelectFeaturedImage(imageUrl: string): void {
+    this.postForm.patchValue({ featuredImage: imageUrl });
+    
+    // Clear video when image is set
+    if (imageUrl) {
+      this.postForm.patchValue({ videoEmbedCode: '' });
+    }
+  }
+
+  removeImage(): void {
+    this.postForm.patchValue({ featuredImage: '' });
+  }
+
+  removeVideo(): void {
+    this.postForm.patchValue({ 
+      videoEmbedCode: '',
+      videoUrl: ''
+    });
+  }
+
+  hasMediaContent(): boolean {
+    return !!(this.postForm.get('featuredImage')?.value || this.postForm.get('videoEmbedCode')?.value);
+  }
+
+  private extractYouTubeUrlFromEmbed(embedCode: string): string {
+    if (!embedCode) return '';
+
+    // Extract video ID from YouTube embed code
+    const embedRegex = /src="https?:\/\/www\.youtube\.com\/embed\/([^"?]+)/;
+    const match = embedCode.match(embedRegex);
+
+    if (match && match[1]) {
+      const videoId = match[1];
+      return `https://www.youtube.com/watch?v=${videoId}`;
+    }
+    
+    return embedCode; // Return original if not a YouTube embed
+  }
 }

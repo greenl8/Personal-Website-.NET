@@ -17,6 +17,10 @@ namespace YourProjectName.DTOs
         
         public string FeaturedImage { get; set; } = string.Empty;
         
+        public string VideoEmbedCode { get; set; } = string.Empty;
+        
+        public string Excerpt { get; set; } = string.Empty;
+        
         public bool IsPublished { get; set; }
         
         public List<int> CategoryIds { get; set; } = new List<int>();
@@ -37,6 +41,10 @@ namespace YourProjectName.DTOs
         
         public string FeaturedImage { get; set; } = string.Empty;
         
+        public string VideoEmbedCode { get; set; } = string.Empty;
+        
+        public string Excerpt { get; set; } = string.Empty;
+        
         public bool IsPublished { get; set; }
         
         public List<int> CategoryIds { get; set; } = new List<int>();
@@ -51,6 +59,8 @@ namespace YourProjectName.DTOs
         public string Content { get; set; } = string.Empty;
         public string Slug { get; set; } = string.Empty;
         public string FeaturedImage { get; set; } = string.Empty;
+        public string VideoEmbedCode { get; set; } = string.Empty;
+        public string Excerpt { get; set; } = string.Empty;
         public bool IsPublished { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? PublishedAt { get; set; }
@@ -66,6 +76,8 @@ namespace YourProjectName.DTOs
         public string Title { get; set; } = string.Empty;
         public string Slug { get; set; } = string.Empty;
         public string FeaturedImage { get; set; } = string.Empty;
+        public string VideoEmbedCode { get; set; } = string.Empty;
+        public string Excerpt { get; set; } = string.Empty;
         public bool IsPublished { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? PublishedAt { get; set; }

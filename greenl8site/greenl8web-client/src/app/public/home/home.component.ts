@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PaginationComponent } from '../../shared/pagination/pagination.component';
 import { NavBarComponent } from '../../nav-bar/nav-bar.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -53,7 +54,8 @@ export class HomeComponent implements OnInit {
   
   constructor(
     private postService: PostService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private sanitizer: DomSanitizer
   ) {}
   
   ngOnInit(): void {
@@ -65,7 +67,7 @@ export class HomeComponent implements OnInit {
     this.loading = true;
     
     this.postService.getPosts(this.filter).subscribe(
-      (result: PaginatedResult<PostListItem>) => {
+      result => {
         this.posts = result.items;
         this.totalCount = result.totalCount;
         this.loading = false;
@@ -113,5 +115,9 @@ export class HomeComponent implements OnInit {
       isPublished: true
     };
     this.loadPosts();
+  }
+
+  getSafeVideoContent(videoEmbedCode: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(videoEmbedCode);
   }
 }

@@ -11,7 +11,9 @@
   <section class="intro-section">
     <h2>Jude Smith / greenl8 portfolio</h2>
     <p>
-      An overview of my work and projects. 
+      Contact Email: jacksonhick330&#64;gmail.com
+      <br>Known as greenl8, mind.space.j and Jude Smith.<br>
+      <br>Find all my main reels below:<br>
     </p>
   </section>
 
@@ -24,10 +26,20 @@
   <section class="posts-grid-section" *ngIf="!loading">
     <div class="posts-grid" *ngIf="posts.length > 0; else noPosts">
       <mat-card *ngFor="let post of posts" class="post-card-item">
-        <img mat-card-image *ngIf="post.featuredImage" [src]="post.featuredImage" [alt]="post.title" class="post-image">
-        <div *ngIf="!post.featuredImage" class="post-image-placeholder">
+        <!-- Video Player for posts with video (takes priority) -->
+        <div *ngIf="post.videoEmbedCode" 
+             class="post-video-container" 
+             [innerHTML]="getSafeVideoContent(post.videoEmbedCode)">
+        </div>
+        
+        <!-- Featured Image for posts without video -->
+        <img mat-card-image *ngIf="!post.videoEmbedCode && post.featuredImage" [src]="post.featuredImage" [alt]="post.title" class="post-image">
+        
+        <!-- Placeholder for posts with neither video nor image -->
+        <div *ngIf="!post.videoEmbedCode && !post.featuredImage" class="post-image-placeholder">
           <mat-icon>web_asset</mat-icon> <!-- Placeholder icon -->
         </div>
+        
         <mat-card-header>
           <mat-card-title>
             <a [routerLink]="['/post', post.slug]">{{ post.title }}</a>

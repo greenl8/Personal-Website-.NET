@@ -3,12 +3,13 @@ import { Tag } from './tag.model';
 import { User } from './user.model';
 
 export interface Post {
-  excerpt: string;
   id: number;
   title: string;
   content: string;
   slug: string;
   featuredImage: string;
+  videoEmbedCode: string;
+  excerpt: string;
   isPublished: boolean;
   createdAt: Date;
   publishedAt?: Date;
@@ -23,6 +24,8 @@ export interface PostListItem {
   title: string;
   slug: string;
   featuredImage: string;
+  videoEmbedCode: string;
+  excerpt: string;
   isPublished: boolean;
   createdAt: Date;
   publishedAt?: Date;
@@ -34,6 +37,8 @@ export interface PostCreateEdit {
   content: string;
   slug?: string;
   featuredImage?: string;
+  videoEmbedCode?: string;
+  excerpt?: string;
   isPublished: boolean;
   categoryIds: number[];
   tagIds: number[];

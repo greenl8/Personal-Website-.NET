@@ -86,6 +86,12 @@
              [src]="postForm.get('featuredImage').value" 
              [alt]="postForm.get('title').value">
 
+        <!-- Video Player for Preview -->
+        <div *ngIf="postForm.get('videoEmbedCode').value" 
+             class="video-player-preview" 
+             [innerHTML]="postForm.get('videoEmbedCode').value">
+        </div>
+
         <mat-card-content>
           <div class="post-content" [innerHTML]="postForm.get('content').value"></div>
           
@@ -292,39 +298,71 @@
           </mat-card-content>
         </mat-card>
         
-        <!-- Featured Image -->
-        <mat-card class="card-featured-image">
+        <!-- Featured Media -->
+        <mat-card class="card-featured-media">
           <mat-card-header>
-            <mat-card-title>Featured Image</mat-card-title>
+            <mat-card-title>Featured Media</mat-card-title>
           </mat-card-header>
           
           <mat-card-content>
-            <div class="featured-image-container">
-              <div *ngIf="postForm.get('featuredImage').value" class="image-preview">
-                <img [src]="postForm.get('featuredImage').value" [alt]="postForm.get('title').value || 'Featured image'">
-                <button mat-mini-fab 
-                        color="warn" 
-                        class="remove-image-btn" 
-                        (click)="removeImage()"
-                        type="button">
-                  <mat-icon><img src="assets/images/close-icon.png" alt="Remove" class="toolbar-img-icon"></mat-icon>
+            <div class="featured-media-container">
+              <!-- Video Section -->
+              <div class="video-section">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>YouTube URL or Embed Code</mat-label>
+                  <textarea matInput 
+                           placeholder="Paste YouTube URL or custom embed code here"
+                           rows="3"
+                           formControlName="videoUrl"
+                           (input)="onVideoUrlChange($event.target.value)">
+                  </textarea>
+                  <mat-hint>Paste a YouTube URL or custom embed code. Video will replace featured image.</mat-hint>
+                </mat-form-field>
+                
+                <div *ngIf="postForm.get('videoEmbedCode').value" class="video-preview">
+                  <div class="video-embed" [innerHTML]="postForm.get('videoEmbedCode').value"></div>
+                  <button mat-mini-fab 
+                          color="warn" 
+                          class="remove-video-btn" 
+                          (click)="removeVideo()"
+                          type="button">
+                    <mat-icon><img src="assets/images/close-icon.png" alt="Remove" class="toolbar-img-icon"></mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Divider -->
+              <mat-divider *ngIf="!hasMediaContent()"></mat-divider>
+              <div *ngIf="!hasMediaContent()" class="media-divider">OR</div>
+
+              <!-- Image Section -->
+              <div class="image-section" *ngIf="!postForm.get('videoEmbedCode').value">
+                <div *ngIf="postForm.get('featuredImage').value" class="image-preview">
+                  <img [src]="postForm.get('featuredImage').value" [alt]="postForm.get('title').value || 'Featured image'">
+                  <button mat-mini-fab 
+                          color="warn" 
+                          class="remove-image-btn" 
+                          (click)="removeImage()"
+                          type="button">
+                    <mat-icon><img src="assets/images/close-icon.png" alt="Remove" class="toolbar-img-icon"></mat-icon>
+                  </button>
+                </div>
+                
+                <div *ngIf="!postForm.get('featuredImage').value" class="no-image">
+                  <mat-icon><img src="assets/images/image-icon.png" alt="No image" class="placeholder-icon"></mat-icon>
+                  <p>No image selected</p>
+                </div>
+                
+                <button mat-stroked-button 
+                        type="button" 
+                        (click)="openMediaSelector()" 
+                        class="full-width-btn">
+                  <mat-icon><img [src]="postForm.get('featuredImage').value ? 'assets/images/image-gallery.png' : 'assets/images/addicon.png'" 
+                           [alt]="postForm.get('featuredImage').value ? 'Change Image' : 'Add Image'" 
+                           class="toolbar-img-icon"></mat-icon>
+                  {{ postForm.get('featuredImage').value ? 'Change Featured Image' : 'Set Featured Image' }}
                 </button>
               </div>
-              
-              <div *ngIf="!postForm.get('featuredImage').value" class="no-image">
-                <mat-icon><img src="assets/images/image-icon.png" alt="No image" class="placeholder-icon"></mat-icon>
-                <p>No image selected</p>
-              </div>
-              
-              <button mat-stroked-button 
-                      type="button" 
-                      (click)="openMediaSelector()" 
-                      class="full-width-btn">
-                <mat-icon><img [src]="postForm.get('featuredImage').value ? 'assets/images/image-gallery.png' : 'assets/images/addicon.png'" 
-                         [alt]="postForm.get('featuredImage').value ? 'Change Image' : 'Add Image'" 
-                         class="toolbar-img-icon"></mat-icon>
-                {{ postForm.get('featuredImage').value ? 'Change Featured Image' : 'Set Featured Image' }}
-              </button>
             </div>
           </mat-card-content>
         </mat-card>

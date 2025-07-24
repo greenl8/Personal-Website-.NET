@@ -1,118 +1,94 @@
 <div class="post-detail-container">
-    <!-- Loading spinner -->
-    <div *ngIf="loading" class="loading-container">
-      <mat-spinner></mat-spinner>
+  <!-- Loading spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-card>
+      <mat-card-content>
+        <h2>Post Not Found</h2>
+        <p>Sorry, the post you are looking for does not exist or is no longer available.</p>
+        <button mat-raised-button color="primary" routerLink="/">Return to Homepage</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Post content -->
+  <div *ngIf="post && !loading && !error" class="post-content-wrapper">
+    
+    <!-- Back Button -->
+    <div class="actions-container">
+      <button mat-button (click)="goBack()" class="back-button">
+        <span class="back-arrow-char">&larr;</span>
+        <span>Back to Freelance Motion Designer and Visual Artist</span>
+      </button>
     </div>
-  
-    <!-- Error message -->
-    <div *ngIf="error && !loading" class="error-container">
-      <mat-card>
-        <mat-card-content>
-          <h2>Post Not Found</h2>
-          <p>Sorry, the post you are looking for does not exist or is no longer available.</p>
-          <button mat-raised-button color="primary" routerLink="/">Return to Homepage</button>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  
-    <!-- Post content -->
-    <div *ngIf="post && !loading && !error" class="post-content-wrapper">
+
+    <!-- Main Content Area -->
+    <div class="post-main-content-area">
       
-      <!-- Video Player -->
-      <!-- For this to work with iframes/scripts, you might need to use DomSanitizer in your component: -->
-      <!-- e.g., [innerHTML]="getSafeHtml(post.videoEmbedCode)" -->
-      <div *ngIf="post.videoEmbedCode" class="video-player-container" [innerHTML]="post.videoEmbedCode">
+      <!-- Post Title -->
+      <h1 class="post-title-main">{{ post.title }}</h1>
+      
+      <!-- Post Subtitle/Excerpt -->
+      <p *ngIf="post.excerpt" class="post-subtitle">{{ post.excerpt }}</p>
+      
+      <!-- Video Player (takes priority) -->
+      <div *ngIf="post.videoEmbedCode" class="video-player-container" [innerHTML]="getSafeVideoContent(post.videoEmbedCode)">
       </div>
       
-      <!-- Fallback to Featured Image if no video embed code -->
+      <!-- Featured Image (only if no video) -->
       <img *ngIf="!post.videoEmbedCode && post.featuredImage"
            [src]="post.featuredImage"
            [alt]="post.title"
-           class="featured-image-top">
+           class="featured-image-main">
 
-      <div class="post-main-content-area">
-        <!-- Post Title -->
-        <h1 class="post-title-main">{{ post.title }}</h1>
-        
-        <!-- Post Metadata -->
-        <div class="post-meta-container">
-          <span class="author">By {{ post.author.username }}</span>
-          <span class="date">{{ post.publishedAt || post.createdAt | date:'mediumDate' }}</span>
-        </div>
-        
-        <!-- Categories -->
-        <div *ngIf="post.categories && post.categories.length > 0" class="post-categories">
-          <mat-chip-list>
-            <mat-chip *ngFor="let category of post.categories"
-                      color="primary"
-                      [routerLink]="['/', { categoryId: category.id }]">
-              {{ category.name }}
-            </mat-chip>
-          </mat-chip-list>
-        </div>
-        
-        <!-- Post actual content -->
-        <!-- For this to work with complex HTML, you might need to use DomSanitizer in your component: -->
-        <!-- e.g., [innerHTML]="getSafeHtml(post.content)" -->
-        <div class="post-content-body" [innerHTML]="post.content"></div>
-        
-        <!-- Tags -->
-        <div *ngIf="post.tags && post.tags.length > 0" class="post-tags">
-          <h3>Tags:</h3>
-          <mat-chip-list>
-            <mat-chip *ngFor="let tag of post.tags"
-                      [routerLink]="['/', { tagId: tag.id }]">
-              {{ tag.name }}
-            </mat-chip>
-          </mat-chip-list>
-        </div>
-        
-        <!-- Social sharing -->
-        <div class="social-sharing">
-          <h3>Share this post:</h3>
-          <button mat-mini-fab color="primary" (click)="shareOnFacebook()" aria-label="Share on Facebook">
-            <mat-icon>facebook</mat-icon>
-          </button>
-          <button mat-mini-fab color="primary" (click)="shareOnTwitter()" aria-label="Share on Twitter">
-            <mat-icon>twitter</mat-icon>
-          </button>
-        </div>
-        
-        <!-- Back Button -->
-        <div class="actions-container">
-          <button mat-button (click)="goBack()" class="back-button">
-            <mat-icon><img src="assets/images/backicon.png" alt="Chevron left Icon" class="toolbar-img-icon"></mat-icon>
-            <span>Back</span>
-          </button>
-        </div>
+      <!-- Post actual content -->
+      <div class="post-content-body" [innerHTML]="post.content"></div>
+      
+      <!-- Social sharing -->
+      <div class="social-sharing">
+        <h3>Share this:</h3>
+        <button mat-stroked-button (click)="shareOnFacebook()" aria-label="Share on Facebook">
+          <mat-icon><img src="assets/images/facebook.png" alt="Facebook Icon" class="social-icon-img"></mat-icon>
+          <span>Facebook</span>
+        </button>
+        <button mat-stroked-button (click)="shareOnTwitter()" aria-label="Share on Twitter">
+          <mat-icon>x</mat-icon>
+          <span>X</span>
+        </button>
       </div>
 
-      <!-- Related posts -->
-      <div *ngIf="relatedPosts.length > 0" class="related-posts">
-        <h2>Related Posts</h2>
-        
-        <div class="related-posts-grid">
-          <mat-card *ngFor="let relatedPost of relatedPosts" class="related-post-card">
-            <img *ngIf="relatedPost.featuredImage" 
-                 mat-card-image 
-                 [src]="relatedPost.featuredImage" 
-                 [alt]="relatedPost.title"
-                 class="related-post-image">
-            
-            <mat-card-header>
-              <mat-card-title>
-                <a [routerLink]="['/post', relatedPost.slug]">{{ relatedPost.title }}</a>
-              </mat-card-title>
-              <mat-card-subtitle>
-                {{ relatedPost.publishedAt || relatedPost.createdAt | date:'mediumDate' }}
-              </mat-card-subtitle>
-            </mat-card-header>
-            
-            <mat-card-actions>
-              <a mat-button [routerLink]="['/post', relatedPost.slug]">READ MORE</a>
-            </mat-card-actions>
-          </mat-card>
-        </div>
+    </div>
+
+    <!-- Related posts -->
+    <div *ngIf="relatedPosts.length > 0" class="related-posts">
+      <h2>Related Posts</h2>
+      
+      <div class="related-posts-grid">
+        <mat-card *ngFor="let relatedPost of relatedPosts" class="related-post-card">
+          <img *ngIf="relatedPost.featuredImage" 
+               mat-card-image 
+               [src]="relatedPost.featuredImage" 
+               [alt]="relatedPost.title"
+               class="related-post-image">
+          
+          <mat-card-header>
+            <mat-card-title>
+              <a [routerLink]="['/post', relatedPost.slug]">{{ relatedPost.title }}</a>
+            </mat-card-title>
+            <mat-card-subtitle>
+              {{ relatedPost.publishedAt || relatedPost.createdAt | date:'mediumDate' }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-actions>
+            <a mat-button [routerLink]="['/post', relatedPost.slug]">READ MORE</a>
+          </mat-card-actions>
+        </mat-card>
       </div>
     </div>
   </div>
+</div>

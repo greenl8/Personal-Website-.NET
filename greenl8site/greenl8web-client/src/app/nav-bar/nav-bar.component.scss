@@ -39,8 +39,19 @@ button.mat-button mat-icon {
   vertical-align: middle;
 }
 
-/* Ensure the nav links are aligned and spaced well */
+::ng-deep .mat-mdc-menu-panel {
+    background-color: #424242 !important;
+  }
+  
+  ::ng-deep .mat-mdc-menu-item {
+    color: #f0f0f0 !important;
+  }
+  
+  ::ng-deep .mat-mdc-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+/* Hide the entire navigation bar */
 :host {
-  display: block; /* Make the host element a block for better layout control */
-  width: 100%;
+  display: none !important; /* Hide the entire nav-bar component */
 }

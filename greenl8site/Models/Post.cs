@@ -21,6 +21,10 @@ namespace YourProjectName.Models
         
         public string FeaturedImage { get; set; } = string.Empty;
         
+        public string VideoEmbedCode { get; set; } = string.Empty;
+        
+        public string Excerpt { get; set; } = string.Empty;
+        
         public bool IsPublished { get; set; } = false;
         
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

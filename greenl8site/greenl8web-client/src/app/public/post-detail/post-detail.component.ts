@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Title, Meta } from '@angular/platform-browser';
+import { Title, Meta, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../models/post.model';
@@ -30,7 +30,8 @@ export class PostDetailComponent implements OnInit {
     private titleService: Title,
     private metaService: Meta,
     private snackBar: MatSnackBar,
-    private location: Location
+    private location: Location,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -137,5 +138,9 @@ export class PostDetailComponent implements OnInit {
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent(this.post.title);
     window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+  }
+
+  getSafeVideoContent(videoEmbedCode: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(videoEmbedCode);
   }
 }

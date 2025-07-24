@@ -1,33 +1,35 @@
 <mat-toolbar color="primary">
-    <!-- Public navigation - Centered -->
-    <button mat-button [matMenuTriggerFor]="pagesMenu">Pages</button>
-    <mat-menu #pagesMenu="matMenu" [overlapTrigger]="false">
-      <button mat-menu-item routerLink="/about">About</button>
-      <button mat-menu-item routerLink="/contact">Contact</button>
-      <!-- Add other public page links here as menu items -->
-    </mat-menu>
-    
-    <!-- Admin controls -->
-    <ng-container *ngIf="(currentUser$ | async) === null">
-      <!-- If not logged in, shows "Admin" button linking to admin (which should redirect to login) -->
-      <button mat-button routerLink="/admin">Admin</button> 
-    </ng-container>
-    
-    <ng-container *ngIf="(currentUser$ | async) as user">
-      <!-- If logged in (always as admin in your case) -->
-      <button mat-button [matMenuTriggerFor]="adminMenu">
-        <mat-icon><img src="assets/images/dashboardicon1v2.png" alt="Default Icon" class="toolbar-img-icon"></mat-icon> <!-- Changed icon to be more admin-specific -->
-        Admin
-      </button>
-      <mat-menu #adminMenu="matMenu" [overlapTrigger]="false">
-        <button mat-menu-item routerLink="/admin"> <!-- Link to the main admin area -->
-          <mat-icon><img src="assets/images/dashboardicon1v2.png" alt="Default Icon" class="toolbar-img-icon"></mat-icon>
-          Admin Dashboard
-        </button>
-        <button mat-menu-item (click)="logout()">
-          <mat-icon><img src="assets/images/dashboardicon1v2.png" alt="Default Icon" class="toolbar-img-icon"></mat-icon>
-          Logout
-        </button>
+    <div class="nav-container">
+      <!-- Public navigation - Centered -->
+      <button mat-button [matMenuTriggerFor]="pagesMenu">Pages</button>
+      <mat-menu #pagesMenu="matMenu" [overlapTrigger]="false">
+        <button mat-menu-item routerLink="/about">About</button>
+        <button mat-menu-item routerLink="/contact">Contact</button>
+        <!-- Add other public page links here as menu items -->
       </mat-menu>
-    </ng-container>
+      
+      <!-- Admin controls -->
+      <ng-container *ngIf="(currentUser$ | async) === null">
+        <!-- If not logged in, shows "Admin" button linking to admin (which should redirect to login) -->
+        <button mat-button routerLink="/admin">Admin</button> 
+      </ng-container>
+      
+      <ng-container *ngIf="(currentUser$ | async) as user">
+        <!-- If logged in (always as admin in your case) -->
+        <button mat-button [matMenuTriggerFor]="adminMenu">
+          <mat-icon><img src="assets/images/dashboardicon1v2.png" alt="Default Icon" class="toolbar-img-icon"></mat-icon> <!-- Changed icon to be more admin-specific -->
+          Admin
+        </button>
+        <mat-menu #adminMenu="matMenu" [overlapTrigger]="false">
+          <button mat-menu-item routerLink="/admin"> <!-- Link to the main admin area -->
+            <mat-icon><img src="assets/images/dashboardicon1v2.png" alt="Default Icon" class="toolbar-img-icon"></mat-icon>
+            Admin Dashboard
+          </button>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon><img src="assets/images/dashboardicon1v2.png" alt="Default Icon" class="toolbar-img-icon"></mat-icon>
+            Logout
+          </button>
+        </mat-menu>
+      </ng-container>
+    </div>
   </mat-toolbar>
