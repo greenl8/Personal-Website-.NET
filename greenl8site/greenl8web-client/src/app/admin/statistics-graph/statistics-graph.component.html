@@ -3,7 +3,7 @@
   <div class="statistics-header">
     <div class="title-section">
       <h2>
-        <mat-icon>show_chart</mat-icon>
+        <img src="assets/images/statistics.png" class="toolbar-img-icon">
         Statistics
       </h2>
       <div class="date-range">{{ getDateRangeLabel() }}</div>
@@ -32,7 +32,7 @@
       
       <!-- Custom date range -->
       <button mat-icon-button [matMenuTriggerFor]="dateMenu" matTooltip="Custom date range">
-        <mat-icon>date_range</mat-icon>
+        <img src="assets/images/dashboard.png" class="toolbar-img-icon">
       </button>
       <mat-menu #dateMenu="matMenu" class="date-menu">
         <div class="date-range-picker" (click)="$event.stopPropagation()">
@@ -73,7 +73,7 @@
     <!-- Views -->
     <div class="metric-card">
       <div class="metric-icon views-icon">
-        <mat-icon>visibility</mat-icon>
+        <img src="assets/images/views.png" alt="Views icon" class="metric-img-icon">
       </div>
       <div class="metric-content">
         <div class="metric-value">{{ viewsStats.current.toLocaleString() }}</div>
@@ -89,7 +89,7 @@
     <!-- Visitors -->
     <div class="metric-card">
       <div class="metric-icon visitors-icon">
-        <mat-icon>group</mat-icon>
+        <img src="assets/images/user.png" alt="Visitors icon" class="metric-img-icon">
       </div>
       <div class="metric-content">
         <div class="metric-value">{{ visitorsStats.current.toLocaleString() }}</div>
@@ -121,7 +121,7 @@
     <!-- Comments -->
     <div class="metric-card">
       <div class="metric-icon comments-icon">
-        <mat-icon>forum</mat-icon>
+        <img src="assets/images/comment.png" alt="Comments icon" class="metric-img-icon">
       </div>
       <div class="metric-content">
         <div class="metric-value">{{ commentsStats.current.toLocaleString() }}</div>

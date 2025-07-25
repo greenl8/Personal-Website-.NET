@@ -11,14 +11,14 @@
       <!-- Navigation items -->
       <mat-nav-list>
         <a mat-list-item routerLink="/admin" routerLinkActive="active">
-          <img src="assets/images/dashboardicon1v2.png" alt="Dashboard icon" class="nav-list-icon">
+          <img src="assets/images/dashboard.png" alt="Dashboard icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Dashboard</span>
         </a>
         
         <h3 matSubheader *ngIf="sidenavOpen">Content</h3>
         
         <a mat-list-item routerLink="/admin/posts" routerLinkActive="active">
-          <img src="assets/images/dashboardicon1v2.png" alt="Posts icon" class="nav-list-icon">
+          <img src="assets/images/posts.png" alt="Posts icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Posts</span>
           <span matBadge="{{dashboardSummary?.draftCount || 0}}" matBadgeSize="small" matBadgeColor="accent" matBadgeOverlap="false" *ngIf="sidenavOpen && dashboardSummary?.draftCount > 0"></span>
         </a>
@@ -29,12 +29,12 @@
         </a>
         
         <a mat-list-item routerLink="/admin/comments" routerLinkActive="active">
-          <img src="assets/images/dashboardicon1v2.png" alt="Comments icon" class="nav-list-icon comments-nav-icon">
+          <img src="assets/images/comment.png" alt="Comments icon" class="nav-list-icon comments-nav-icon">
           <span *ngIf="sidenavOpen">Comments</span>
         </a>
         
         <a mat-list-item routerLink="/admin/media" routerLinkActive="active">
-          <img src="assets/images/dashboardicon1v2.png" alt="Media icon" class="nav-list-icon">
+          <img src="assets/images/image-gallery.png" alt="Media icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Media</span>
         </a>
         
@@ -53,12 +53,12 @@
         <h3 matSubheader *ngIf="sidenavOpen">Settings</h3>
         
         <a mat-list-item routerLink="/admin/users" routerLinkActive="active">
-          <img src="assets/images/dashboardicon1v2.png" alt="Users icon" class="nav-list-icon">
+          <img src="assets/images/user.png" alt="Users icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Users</span>
         </a>
         
         <a mat-list-item routerLink="/admin/settings" routerLinkActive="active">
-          <img src="assets/images/dashboardicon1v2.png" alt="Settings icon" class="nav-list-icon">
+          <img src="assets/images/settings.png" alt="Settings icon" class="nav-list-icon">
           <span *ngIf="sidenavOpen">Settings</span>
         </a>
       </mat-nav-list>
@@ -182,7 +182,7 @@
         <div class="stats-cards">
           <mat-card class="stat-card" matRipple>
             <div class="stat-icon posts-icon">
-              <mat-icon>article</mat-icon>
+              <img src="assets/images/posts.png" alt="Posts icon" class="stat-img-icon">
             </div>
             <div class="stat-details">
               <div class="stat-value">{{ formatNumber(dashboardSummary?.postCount || 0) }}</div>
@@ -193,7 +193,7 @@
           
           <mat-card class="stat-card" matRipple>
             <div class="stat-icon comments-icon">
-              <mat-icon>comment</mat-icon>
+              <img src="assets/images/comment.png" alt="Comments icon" class="stat-img-icon">
             </div>
             <div class="stat-details">
               <div class="stat-value">{{ formatNumber(dashboardSummary?.commentCount || 0) }}</div>
@@ -204,7 +204,7 @@
           
           <mat-card class="stat-card" matRipple>
             <div class="stat-icon users-icon">
-              <mat-icon>group</mat-icon>
+              <img src="assets/images/user.png" alt="Users icon" class="stat-img-icon">
             </div>
             <div class="stat-details">
               <div class="stat-value">{{ formatNumber(dashboardSummary?.userCount || 0) }}</div>
@@ -215,7 +215,7 @@
           
           <mat-card class="stat-card" matRipple>
             <div class="stat-icon views-icon">
-              <mat-icon>visibility</mat-icon>
+              <img src="assets/images/views.png" alt="Views icon" class="stat-img-icon">
             </div>
             <div class="stat-details">
               <div class="stat-value">{{ formatNumber(dashboardSummary?.viewCount || 0) }}</div>
@@ -229,11 +229,14 @@
         <div class="dashboard-charts">
           <mat-card class="chart-card">
             <mat-card-header>
-              <mat-card-title class="card-title-with-icon"><mat-icon>show_chart</mat-icon> Site Traffic</mat-card-title>
+              <mat-card-title class="card-title-with-icon">
+                <img src="assets/images/traffic.png" alt="Traffic icon" class="card-title-img-icon">
+                Site Traffic
+              </mat-card-title>
               <div class="chart-actions">
                 <button mat-button [matMenuTriggerFor]="periodMenu">
                   {{ currentPeriodLabel }}
-                  <mat-icon>arrow_drop_down</mat-icon>
+                  <img src="assets/images/arrow-down.png" alt="">
                 </button>
                 <mat-menu #periodMenu="matMenu">
                   <button mat-menu-item *ngFor="let period of timePeriods" 
@@ -259,7 +262,10 @@
           <div class="recent-activity-section">
             <mat-card>
               <mat-card-header>
-                <mat-card-title class="card-title-with-icon"><mat-icon>history</mat-icon> Recent Activity</mat-card-title>
+                <mat-card-title class="card-title-with-icon">
+                  <img src="assets/images/dashboardicon1v2.png" alt="Activity icon" class="card-title-img-icon">
+                  Recent Activity
+                </mat-card-title>
               </mat-card-header>
               
               <mat-card-content>
@@ -272,7 +278,10 @@
           <div class="quick-actions-section">
             <mat-card>
               <mat-card-header>
-                <mat-card-title class="card-title-with-icon"><mat-icon>bolt</mat-icon> Quick Actions</mat-card-title>
+                <mat-card-title class="card-title-with-icon">
+                  <img src="assets/images/dashboardicon1v2.png" alt="Actions icon" class="card-title-img-icon">
+                  Quick Actions
+                </mat-card-title>
               </mat-card-header>
               
               <mat-card-content>
@@ -287,7 +296,10 @@
           <!-- Draft posts -->
           <mat-card class="recent-drafts-card">
             <mat-card-header>
-              <mat-card-title class="card-title-with-icon"><mat-icon>edit_note</mat-icon> Recent Drafts</mat-card-title>
+              <mat-card-title class="card-title-with-icon">
+                <img src="assets/images/posts.png" alt="Drafts icon" class="card-title-img-icon">
+                Recent Drafts
+              </mat-card-title>
             </mat-card-header>
             
             <mat-card-content>
@@ -313,7 +325,10 @@
           <!-- Recent comments -->
           <mat-card class="recent-comments-card">
             <mat-card-header>
-              <mat-card-title class="card-title-with-icon"><mat-icon>forum</mat-icon> Recent Comments</mat-card-title>
+              <mat-card-title class="card-title-with-icon">
+                <img src="assets/images/comment.png" alt="Comments icon" class="card-title-img-icon">
+                Recent Comments
+              </mat-card-title>
             </mat-card-header>
             
             <mat-card-content>
@@ -345,7 +360,10 @@
         <div class="system-status-section" *ngIf="systemStatus">
           <mat-card>
             <mat-card-header>
-              <mat-card-title class="card-title-with-icon"><mat-icon>settings_system_daydream</mat-icon> System Status</mat-card-title>
+              <mat-card-title class="card-title-with-icon">
+                <img src="assets/images/settings.png" alt="System status icon" class="card-title-img-icon">
+                System Status
+              </mat-card-title>
             </mat-card-header>
             
             <mat-card-content>

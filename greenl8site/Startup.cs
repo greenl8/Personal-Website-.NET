@@ -94,7 +94,7 @@ namespace YourProjectName
                 options.AddPolicy("CorsPolicy", policy =>
                 {
                     policy.AllowAnyHeader()
-                          .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                          .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                           .AllowCredentials()
                           .WithOrigins(
                               "http://localhost:4200",  // Default Angular port

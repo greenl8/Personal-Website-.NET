@@ -24,6 +24,13 @@
         font-weight: 600;
         color: #1e1e1e;
         
+        // Make the statistics icon smaller than standard toolbar icons
+        .toolbar-img-icon {
+          width: 16px;
+          height: 16px;
+          object-fit: contain;
+        }
+        
         mat-icon {
           color: #0073aa;
         }
@@ -143,6 +150,14 @@
           width: 20px;
           height: 20px;
           color: white;
+        }
+        
+        // Style for image icons
+        .metric-img-icon {
+          width: 20px;
+          height: 20px;
+          object-fit: contain;
+          filter: brightness(0) invert(1); // Make icons white to match Material icons
         }
         
         &.views-icon {

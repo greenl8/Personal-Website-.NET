@@ -85,10 +85,13 @@ $transition-duration: 0.3s;
   position: sticky;
   top: 0;
   z-index: 2;
+  background-color: white !important; // Force white background instead of transparent
+  color: #333 !important; // Dark text for contrast on white background
   
   .page-title {
     font-size: 1.2rem;
     font-weight: 500;
+    color: #333 !important; // Dark text color
   }
   
   .spacer {
@@ -106,6 +109,15 @@ $transition-duration: 0.3s;
         justify-content: center;
       }
     }
+    
+    // Style toolbar buttons for white background
+    button {
+      color: #333 !important; // Dark color for buttons on white background
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04) !important; // Light hover effect
+      }
+    }
   }
   
   .user-button {
@@ -116,7 +128,8 @@ $transition-duration: 0.3s;
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: $primary-color; // Keep primary color for avatar
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,12 +137,34 @@ $transition-duration: 0.3s;
   }
 }
 
-// User menu
+// User menu and all dropdown menus
+::ng-deep .mat-mdc-menu-panel {
+  background-color: white !important; // Force white background for all dropdowns
+  border: 1px solid rgba(0, 0, 0, 0.12) !important; // Add subtle border for definition
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important; // Enhanced shadow for depth
+}
+
+::ng-deep .mat-mdc-menu-item {
+  color: #333 !important; // Dark text on white background
+  
+  &:hover, &:focus {
+    background-color: rgba(0, 0, 0, 0.04) !important; // Light hover effect
+    color: #333 !important;
+  }
+  
+  mat-icon {
+    color: #666 !important; // Slightly muted icons
+  }
+}
+
+// Specific styling for user info section in user menu
 ::ng-deep .mat-menu-panel {
   .user-info {
     padding: 16px;
     display: flex;
     align-items: center;
+    background-color: white !important; // Ensure white background
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12); // Add separator line
     
     .user-avatar {
       width: 40px;
@@ -141,6 +176,20 @@ $transition-duration: 0.3s;
       align-items: center;
       justify-content: center;
       font: 14px Arial, sans-serif;
+      margin-right: 12px;
+    }
+    
+    .user-details {
+      .user-name {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 2px;
+      }
+      
+      .user-email, .user-role {
+        font-size: 0.875rem;
+        color: #666;
+      }
     }
   }
 }
@@ -335,10 +384,24 @@ $transition-duration: 0.3s;
         height: 24px !important;
       }
       
+      // Style for image icons in stats cards
+      .stat-img-icon {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+      }
+      
       &.posts-icon mat-icon { color: #3f51b5 !important; }
+      &.posts-icon .stat-img-icon { filter: hue-rotate(220deg) saturate(1.5) brightness(0.8); }
+      
       &.comments-icon mat-icon { color: #ff9800 !important; }
+      &.comments-icon .stat-img-icon { filter: hue-rotate(30deg) saturate(1.5) brightness(0.8); }
+      
       &.users-icon mat-icon { color: #4caf50 !important; }
+      &.users-icon .stat-img-icon { filter: hue-rotate(120deg) saturate(1.5) brightness(0.8); }
+      
       &.views-icon mat-icon { color: #e91e63 !important; }
+      &.views-icon .stat-img-icon { filter: hue-rotate(320deg) saturate(1.5) brightness(0.8); }
     }
     
     .stat-details {
@@ -387,6 +450,15 @@ $transition-duration: 0.3s;
   mat-icon {
     margin-right: 8px; // Space between icon and title text
   }
+  
+  // Style for image icons in card titles
+  .card-title-img-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    object-fit: contain;
+    filter: hue-rotate(200deg) saturate(1.2) brightness(0.7); // Give it a blue tint
+  }
 }
 
 .nav-list-icon {
@@ -401,4 +473,37 @@ $transition-duration: 0.3s;
   height: 20px; // Keep it square
   display: block; // Helps with layout inside button
   object-fit: contain; // Ensures the image fits within the dimensions
+}
+
+// Ensure all Angular Material select panels have white backgrounds
+::ng-deep .mat-mdc-select-panel {
+  background-color: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+::ng-deep .mat-mdc-option {
+  color: #333 !important;
+  
+  &:hover, &:focus {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+  }
+  
+  &.mdc-list-item--selected {
+    background-color: rgba(63, 81, 181, 0.1) !important; // Light primary color for selected items
+    color: $primary-color !important;
+  }
+}
+
+// Ensure autocomplete panels are also white
+::ng-deep .mat-mdc-autocomplete-panel {
+  background-color: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+// Fix any tooltip backgrounds that might be transparent
+::ng-deep .mat-mdc-tooltip {
+  background-color: rgba(97, 97, 97, 0.9) !important; // Keep tooltips dark but ensure they're visible
+  color: white !important;
 }
