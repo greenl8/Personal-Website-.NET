@@ -143,18 +143,24 @@
         <mat-spinner diameter="40"></mat-spinner>
       </div>
       
-      <!-- Error message -->
+
+    <mat-card>
+        <app-statistics-graph></app-statistics-graph>
+    </mat-card>
+
+      <!-- Error message for the main dashboard content -->
       <div *ngIf="error && !loading" class="error-container">
         <mat-card>
           <mat-card-content>
             <mat-icon><img src="assets/images/errordefault.png" alt="Error Icon" class="toolbar-img-icon"></mat-icon>
-            <h3>Error Loading Dashboard</h3>
-            <p>There was a problem loading the dashboard data. Please try again.</p>
+            <h3>Error Loading Dashboard Content</h3>
+            <p>There was a problem loading the main dashboard data. The statistics graph below may show demo data.</p>
             <button mat-raised-button color="primary" (click)="refreshData()">Retry</button>
           </mat-card-content>
         </mat-card>
       </div>
-      
+
+
       <!-- Dashboard content -->
       <div class="dashboard-content" *ngIf="!loading && !error">
         <!-- Welcome card -->
@@ -167,7 +173,6 @@
               </div>
               <div class="date-time">
                 <div class="current-date">{{ currentDate | date:'fullDate' }}</div>
-                <div class="last-login" *ngIf="currentUser?.lastLogin">Last login: {{ currentUser.lastLogin | date:'medium' }}</div>
               </div>
             </mat-card-content>
           </mat-card>
@@ -364,7 +369,7 @@
                 
                 <div class="status-item">
                   <div class="status-label">Storage Used</div>
-                  <div class="status-value" [ngClass]="getStatusClass(systemStatus.storageStatus)">
+                  <div class="status-value">
                     {{ systemStatus.storageUsed }} / {{ systemStatus.storageTotal }}
                   </div>
                   <mat-progress-bar mode="determinate" [value]="systemStatus.storagePercentage" 

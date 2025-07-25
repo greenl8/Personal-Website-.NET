@@ -10,16 +10,31 @@ $background-color: #f5f5f7;
 $card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 $transition-duration: 0.3s;
 
-// Layout
+// Layout fixes with higher specificity
 .admin-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .sidenav-container {
-  flex: 1;
-  height: calc(100vh - 64px); // Adjust for top toolbar
+  flex: 1 !important;
+  height: calc(100vh - 64px) !important;
+  margin-top: 0 !important;
+}
+
+// Statistics section styling
+.statistics-section {
+  margin: 24px 0 24px 0; // Added top margin for proper spacing
+  
+  ::ng-deep app-statistics-graph {
+    display: block;
+    width: 100%;
+    
+    .statistics-container {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
 }
 
 // Sidenav
@@ -132,10 +147,16 @@ $transition-duration: 0.3s;
 
 // Styles for content visibility
 .admin-main-content {
-  background-color: $background-color;
-  padding: 20px;
-  position: relative;
-  z-index: 1;
+  background-color: $background-color !important;
+  margin-top: 0 !important;
+  padding: 24px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  overflow-y: auto !important;
+}
+
+.app-statistics-graph {
+  margin-top: 0 !important;
 }
 
 .error-container {
@@ -167,9 +188,183 @@ $transition-duration: 0.3s;
   }
 }
 
+// Dashboard content container
 .dashboard-content {
   position: relative;
   z-index: 1;
+  padding: 0;
+  max-width: 100%;
+  
+  // More specific targeting for child elements
+  .welcome-card,
+  .stats-cards,
+  .dashboard-charts,
+  .activity-actions-container,
+  .recent-content-section,
+  .system-status-section {
+    margin-bottom: 24px;
+    width: 100%;
+  }
+}
+
+// Welcome card styling
+.welcome-card {
+  mat-card {
+    padding: 24px;
+    
+    mat-card-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .welcome-message {
+        h2 {
+          margin: 0 0 8px 0;
+          font-size: 1.5rem;
+          color: #333;
+        }
+        
+        p {
+          margin: 0;
+          color: #666;
+        }
+      }
+      
+      .date-time {
+        text-align: right;
+        
+        .current-date {
+          font-size: 0.875rem;
+          color: #999;
+        }
+      }
+    }
+  }
+}
+
+// Stats cards styling
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  
+  .stat-card {
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .stat-icon {
+      margin-right: 16px;
+      
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+      
+      &.posts-icon mat-icon { color: #3f51b5; }
+      &.comments-icon mat-icon { color: #ff9800; }
+      &.users-icon mat-icon { color: #4caf50; }
+      &.views-icon mat-icon { color: #e91e63; }
+    }
+    
+    .stat-details {
+      flex: 1;
+      
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 4px;
+        color: #333;
+      }
+      
+      .stat-label {
+        font-size: 0.875rem;
+        color: #666;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+      
+      .stat-secondary {
+        font-size: 0.75rem;
+        color: #999;
+      }
+    }
+  }
+}
+
+// Stats cards styling with higher specificity
+.stats-cards {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+  gap: 16px !important;
+  margin-bottom: 24px !important;
+  width: 100% !important;
+  
+  .stat-card {
+    display: flex !important;
+    align-items: center !important;
+    padding: 24px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    box-shadow: $card-shadow !important;
+    background: white !important;
+    
+    &:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .stat-icon {
+      margin-right: 16px !important;
+      
+      mat-icon {
+        font-size: 24px !important;
+        width: 24px !important;
+        height: 24px !important;
+      }
+      
+      &.posts-icon mat-icon { color: #3f51b5 !important; }
+      &.comments-icon mat-icon { color: #ff9800 !important; }
+      &.users-icon mat-icon { color: #4caf50 !important; }
+      &.views-icon mat-icon { color: #e91e63 !important; }
+    }
+    
+    .stat-details {
+      flex: 1 !important;
+      
+      .stat-value {
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        line-height: 1 !important;
+        margin-bottom: 4px !important;
+        color: #333 !important;
+      }
+      
+      .stat-label {
+        font-size: 0.875rem !important;
+        color: #666 !important;
+        font-weight: 500 !important;
+        margin-bottom: 4px !important;
+      }
+      
+      .stat-secondary {
+        font-size: 0.75rem !important;
+        color: #999 !important;
+      }
+    }
+  }
 }
 
 .loading-overlay {

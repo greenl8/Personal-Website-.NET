@@ -1,0 +1,411 @@
+.statistics-container {
+  background: #fff;
+  border: 1px solid #e1e1e1;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  margin: 50px 0 50px 0; // Remove margin when embedded in admin dashboard
+  
+  .statistics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px; // Reduced padding
+    border-bottom: 1px solid #f0f0f1;
+    background: #fafafa;
+    border-radius: 4px 4px 0 0;
+    
+    .title-section {
+      h2 {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e1e1e;
+        
+        mat-icon {
+          color: #0073aa;
+        }
+      }
+      
+      .date-range {
+        font-size: 13px;
+        color: #646970;
+        margin-top: 4px;
+        font-weight: 500;
+      }
+    }
+    
+    .controls-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      
+      .interval-select {
+        width: 120px;
+        
+        ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+          display: none;
+        }
+      }
+      
+      .quick-ranges {
+        display: flex;
+        gap: 4px;
+        
+        button {
+          color: #646970;
+          font-size: 13px;
+          padding: 6px 12px;
+          min-width: auto;
+          
+          &.active {
+            background: #0073aa;
+            color: white;
+          }
+          
+          &:hover:not(.active) {
+            background: #f6f7f7;
+            color: #0073aa;
+          }
+        }
+      }
+    }
+  }
+  
+  .loading-state, .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    text-align: center;
+    color: #646970;
+    
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+    
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      color: #1e1e1e;
+    }
+    
+    p {
+      margin: 0 0 16px 0;
+      font-size: 14px;
+      max-width: 400px;
+    }
+  }
+  
+  .error-state {
+    mat-icon {
+      color: #dc3232;
+    }
+  }
+  
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); // Smaller minimum width
+    gap: 1px;
+    background: #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+    
+    .metric-card {
+      background: white;
+      padding: 16px; // Reduced padding
+      display: flex;
+      align-items: center;
+      gap: 12px; // Reduced gap
+      position: relative;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: #f8f9fa;
+      }
+      
+      .metric-icon {
+        width: 40px; // Smaller icon
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        mat-icon {
+          font-size: 20px; // Smaller icon size
+          width: 20px;
+          height: 20px;
+          color: white;
+        }
+        
+        &.views-icon {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        &.visitors-icon {
+          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        &.likes-icon {
+          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        &.comments-icon {
+          background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+      }
+      
+      .metric-content {
+        flex: 1;
+        
+        .metric-value {
+          font-size: 24px; // Reduced font size
+          font-weight: 700;
+          color: #1e1e1e;
+          line-height: 1;
+          margin-bottom: 4px;
+        }
+        
+        .metric-label {
+          font-size: 12px; // Slightly smaller
+          color: #646970;
+          text-transform: uppercase;
+          font-weight: 500;
+          letter-spacing: 0.5px;
+          margin-bottom: 6px; // Reduced margin
+        }
+        
+        .metric-change {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 11px; // Smaller font
+          font-weight: 600;
+          
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+          }
+          
+          &.trend-up {
+            color: #46b450;
+          }
+          
+          &.trend-down {
+            color: #dc3232;
+          }
+        }
+      }
+    }
+  }
+  
+  .chart-section {
+    padding: 20px; // Reduced padding
+    min-height: 280px; // Reduced min-height
+    
+    .no-data-message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 220px; // Reduced height
+      text-align: center;
+      color: #646970;
+      
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+        opacity: 0.6;
+      }
+      
+      h3 {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+        color: #1e1e1e;
+      }
+      
+      p {
+        margin: 0;
+        font-size: 14px;
+        max-width: 400px;
+      }
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 280px; // Fixed height for chart
+      width: 100%;
+      
+      canvas {
+        max-height: 280px !important;
+        max-width: 100% !important;
+        display: block;
+      }
+    }
+  }
+  
+  .insights-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #e1e1e1;
+    border-radius: 0 0 4px 4px;
+    overflow: hidden;
+    
+    .insight-card {
+      background: white;
+      padding: 16px; // Reduced padding
+      
+      h4 {
+        margin: 0 0 12px 0; // Reduced margin
+        font-size: 13px; // Slightly smaller
+        font-weight: 600;
+        color: #1e1e1e;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .insight-content {
+        .insight-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 0;
+          border-bottom: 1px solid #f0f0f1;
+          
+          &:last-child {
+            border-bottom: none;
+          }
+          
+          .insight-label {
+            font-size: 13px;
+            color: #646970;
+          }
+          
+          .insight-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e1e1e;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Date menu styling
+::ng-deep .date-menu {
+  .date-range-picker {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 280px;
+  }
+}
+
+// Chart.js overrides
+::ng-deep .statistics-container {
+  .chart-container {
+    canvas {
+      border-radius: 4px;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .statistics-container {
+    margin: 16px 0;
+    
+    .statistics-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px;
+      
+      .controls-section {
+        width: 100%;
+        justify-content: space-between;
+        
+        .quick-ranges {
+          flex: 1;
+          justify-content: center;
+        }
+      }
+    }
+    
+    .metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+      
+      .metric-card {
+        padding: 16px;
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+        
+        .metric-icon {
+          width: 40px;
+          height: 40px;
+          
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+        }
+        
+        .metric-content {
+          .metric-value {
+            font-size: 24px;
+          }
+        }
+      }
+    }
+    
+    .chart-section {
+      padding: 16px;
+    }
+    
+    .insights-section {
+      grid-template-columns: 1fr;
+      
+      .insight-card {
+        padding: 16px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .statistics-container {
+    .metrics-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .statistics-header {
+      .controls-section {
+        flex-direction: column;
+        width: 100%;
+        
+        .quick-ranges {
+          button {
+            flex: 1;
+            font-size: 12px;
+            padding: 8px 4px;
+          }
+        }
+      }
+    }
+  }
+} 

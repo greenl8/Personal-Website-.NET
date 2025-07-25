@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 // Material Imports
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -30,6 +31,7 @@ import { MediaService } from '../../services/media.service';
 // Charts component
 //import { NgChartsModule } from 'ng2-charts';
 import { DashboardChartComponent } from '../dashboard-chart/dashboard-chart.component';
+import { StatisticsGraphComponent } from '../statistics-graph/statistics-graph.component';
 import { RecentActivityComponent } from '../recent-activity/recent-activity.component';
 import { QuickActionsComponent } from '../quick-actions/quick-actions.component';
 
@@ -60,6 +62,7 @@ import { DashboardSummary, RecentActivity, SystemStatus } from '../../models/das
     MatProgressSpinnerModule,
     //NgChartsModule,
     DashboardChartComponent,
+    StatisticsGraphComponent,
     RecentActivityComponent,
     QuickActionsComponent
   ]
@@ -98,7 +101,7 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCurrentUser();
-    this.loadDashboardData();
+    this.loadAllData();
   }
   
   /**
@@ -118,47 +121,48 @@ export class AdminDashboardComponent implements OnInit {
   /**
    * Loads all dashboard data using parallel requests
    */
-  loadDashboardData(): void {
+  loadAllData(): void {
     this.loading = true;
-    
+    this.error = false;
+
     forkJoin({
       summary: this.getDashboardSummary(),
       activities: this.getRecentActivities(),
-      systemStatus: this.getSystemStatus()
-    }).subscribe(
-      results => {
-        this.dashboardSummary = results.summary;
-        this.recentActivities = results.activities;
-        this.systemStatus = results.systemStatus;
+      status: this.getSystemStatus()
+    }).subscribe({
+      next: (data) => {
+        this.dashboardSummary = data.summary;
+        this.recentActivities = data.activities;
+        this.systemStatus = data.status;
         this.loading = false;
       },
-      error => {
-        console.error('Error loading dashboard data:', error);
+      error: (err) => {
+        console.error('Error loading dashboard data:', err);
         this.error = true;
         this.loading = false;
       }
-    );
+    });
   }
   
   /**
    * Fetches summary statistics for the dashboard
    */
   getDashboardSummary(): Observable<DashboardSummary> {
-    return this.http.get<DashboardSummary>('api/dashboard/summary');
+    return this.http.get<DashboardSummary>(`${environment.apiUrl}dashboard/summary`);
   }
   
   /**
    * Fetches recent activities for the activity feed
    */
   getRecentActivities(): Observable<RecentActivity[]> {
-    return this.http.get<RecentActivity[]>('api/dashboard/activities');
+    return this.http.get<RecentActivity[]>(`${environment.apiUrl}dashboard/activities`);
   }
   
   /**
    * Fetches system status information
    */
   getSystemStatus(): Observable<SystemStatus> {
-    return this.http.get<SystemStatus>('api/dashboard/status');
+    return this.http.get<SystemStatus>(`${environment.apiUrl}dashboard/status`);
   }
   
   /**
@@ -181,13 +185,17 @@ export class AdminDashboardComponent implements OnInit {
    * Refreshes all dashboard data
    */
   refreshData(): void {
-    this.loadDashboardData();
+    this.loadAllData();
   }
   
   /**
    * Returns the appropriate CSS class based on system status
    */
   getStatusClass(status: string): string {
+    if (!status) {
+      return '';
+    }
+    
     switch (status.toLowerCase()) {
       case 'good':
         return 'status-good';
