@@ -12,13 +12,17 @@
 .new-home-container {
   background-color: var(--background-color);
   color: var(--text-color);
-  padding: 20px;
+  padding: 200px 20px 20px 20px; /* Substantially increased desktop top padding to 200px */
+  padding-top: max(200px, calc(200px + env(safe-area-inset-top, 0px))); /* Add safe area to base padding */
   min-height: 100vh; /* Ensure it takes at least full viewport height */
+  min-height: calc(100vh - env(safe-area-inset-bottom, 0px)); /* Account for bottom safe area */
+  display: flex;
+  flex-direction: column;
   
-  // Mobile-specific padding to account for browser URL bars
+  // Mobile-specific padding to account for browser URL bars and status bars
   @media (max-width: 768px) {
-    padding: 60px 20px 20px 20px; // Increased top padding for mobile
-    padding-top: max(60px, env(safe-area-inset-top, 60px)); // Safe area support
+    padding: 100px 20px 20px 20px; // Keep mobile padding as is
+    padding-top: max(100px, calc(100px + env(safe-area-inset-top, 0px))); // Combine base + safe area
     padding-left: max(20px, env(safe-area-inset-left, 20px));
     padding-right: max(20px, env(safe-area-inset-right, 20px));
     min-height: 100vh;
@@ -26,10 +30,23 @@
   }
   
   @media (max-width: 480px) {
-    padding: 80px 15px 20px 15px; // Even more top padding for smaller phones
-    padding-top: max(80px, env(safe-area-inset-top, 80px));
+    padding: 120px 15px 20px 15px; // Keep small mobile padding as is
+    padding-top: max(120px, calc(120px + env(safe-area-inset-top, 0px))); // Combine base + safe area
     padding-left: max(15px, env(safe-area-inset-left, 15px));
     padding-right: max(15px, env(safe-area-inset-right, 15px));
+  }
+  
+  // Additional fallback for devices with persistent status bars
+  @supports (padding: max(0px)) {
+    padding-top: max(200px, calc(200px + var(--status-bar-height, 0px))); /* Updated for desktop */
+    
+    @media (max-width: 768px) {
+      padding-top: max(100px, calc(100px + var(--status-bar-height, 0px)));
+    }
+    
+    @media (max-width: 480px) {
+      padding-top: max(120px, calc(120px + var(--status-bar-height, 0px)));
+    }
   }
 }
 
@@ -38,7 +55,8 @@
   text-align: center;
   padding: 40px 20px;
   border-bottom: 1px solid var(--card-border-color);
-  margin-bottom: 40px;
+  margin-bottom: clamp(30px, 5vh, 50px); /* Responsive margin that scales with viewport */
+  flex-shrink: 0; /* Prevent header from shrinking */
 
   h1 {
     font-size: 3rem; /* Larger font for main title */
@@ -55,7 +73,7 @@
   // Mobile optimizations
   @media (max-width: 768px) {
     padding: 20px 15px;
-    margin-bottom: 30px;
+    margin-bottom: clamp(20px, 4vh, 40px);
     
     h1 {
       font-size: 2.2rem;
@@ -70,7 +88,7 @@
   
   @media (max-width: 480px) {
     padding: 15px 10px;
-    margin-bottom: 25px;
+    margin-bottom: clamp(15px, 3vh, 35px);
     
     h1 {
       font-size: 1.8rem;
@@ -86,8 +104,10 @@
 .intro-section {
   text-align: center;
   max-width: 800px;
-  margin: 0 auto 40px auto;
+  margin: 0 auto;
+  margin-bottom: clamp(30px, 6vh, 60px); /* Responsive margin */
   padding: 0 20px;
+  flex-shrink: 0; /* Prevent intro from shrinking */
 
   h2 {
     font-size: 2.2rem;
@@ -104,7 +124,7 @@
   
   // Mobile optimizations
   @media (max-width: 768px) {
-    margin: 0 auto 30px auto;
+    margin-bottom: clamp(20px, 5vh, 45px);
     padding: 0 15px;
     
     h2 {
@@ -119,7 +139,7 @@
   }
   
   @media (max-width: 480px) {
-    margin: 0 auto 25px auto;
+    margin-bottom: clamp(15px, 4vh, 40px);
     padding: 0 10px;
     
     h2 {
@@ -138,6 +158,7 @@
   display: flex;
   justify-content: center;
   padding: 80px 0;
+  flex-grow: 1; /* Allow loading container to grow */
 }
 
 .no-posts-message {
@@ -146,7 +167,8 @@
   background-color: var(--card-background-color);
   border: 1px solid var(--card-border-color);
   border-radius: 8px;
-  margin: 20px;
+  margin: 20px auto;
+  max-width: 600px;
   p {
     font-size: 1.1rem;
     color: #aaa;
@@ -155,7 +177,10 @@
 
 /* Posts Grid Section */
 .posts-grid-section {
-  padding: 20px 0;
+  padding: 20px 0 40px 0; /* Added bottom padding for better spacing */
+  flex-grow: 1; /* Allow posts section to grow and take available space */
+  display: flex;
+  flex-direction: column;
 }
 
 .posts-grid {
@@ -164,6 +189,7 @@
   gap: 25px;
   max-width: 1200px; /* Max width for the grid */
   margin: 0 auto;
+  width: 100%;
   
   // Larger cards for bigger screens to showcase HD videos
   @media (min-width: 1200px) {
@@ -183,6 +209,8 @@
   border-radius: 8px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   overflow: hidden;
+  display: flex;
+  flex-direction: column; /* Ensure consistent card layout */
   
   &:hover {
     transform: translateY(-2px);
@@ -299,11 +327,10 @@ app-pagination {
   display: flex;
   justify-content: center;
   padding: 30px 0;
+  margin-top: auto; /* Push pagination to bottom if content is short */
   // Further styling for pagination component might be needed inside its own SCSS
   // or by overriding its styles carefully here if it uses ::ng-deep or similar.
 }
-
-
 
 /* Media query for responsiveness */
 @media (max-width: 768px) {
