@@ -27,9 +27,25 @@ namespace YourProjectName
         
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add DbContext
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+            // Add DbContext - use PostgreSQL in production, SQLite in development
+            var connectionString = EnvironmentService.GetResolvedConnectionString(_config, "DefaultConnection");
+            
+            if (connectionString?.Contains("Data Source=") == true)
+            {
+                // SQLite for development
+                services.AddDbContext<AppDbContext>(options =>
+                    options.UseSqlite(connectionString));
+            }
+            else if (!string.IsNullOrEmpty(connectionString))
+            {
+                // PostgreSQL for production (Fly.io uses PostgreSQL)
+                services.AddDbContext<AppDbContext>(options =>
+                    options.UseNpgsql(connectionString));
+            }
+            else
+            {
+                throw new InvalidOperationException("No valid database connection string found.");
+            }
                 
             // Add AutoMapper
             services.AddAutoMapper(typeof(MappingProfiles));
@@ -39,6 +55,14 @@ namespace YourProjectName
             services.AddScoped<FileService>();
             services.AddScoped<SlugService>();
             
+            // Handle environment variable substitution for TokenKey
+            var tokenKey = EnvironmentService.GetResolvedValue(_config, "TokenKey");
+            
+            if (string.IsNullOrEmpty(tokenKey))
+            {
+                throw new InvalidOperationException("TokenKey is not configured in application settings");
+            }
+            
             // Add authentication
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -46,9 +70,7 @@ namespace YourProjectName
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                        _config["TokenKey"] ?? throw new InvalidOperationException("TokenKey is not configured in application settings")
-                        )),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         RoleClaimType = ClaimTypes.Role,
@@ -99,7 +121,9 @@ namespace YourProjectName
                           .WithOrigins(
                               "http://localhost:4200",  // Default Angular port
                               "http://localhost:4201",  // Alternative Angular port
-                              "http://192.168.0.81:4200" // Mobile access
+                              "http://192.168.0.81:4200", // Mobile access
+                              "https://greenl8site.fly.dev", // Fly.io deployment URL
+                              "https://your-app-name.azurewebsites.net" // Add your Azure URL here
                           );
                 });
             });

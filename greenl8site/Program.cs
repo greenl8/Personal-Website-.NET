@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using YourProjectName.Data;
 using YourProjectName.Models;
+using YourProjectName.Services;
 
 namespace YourProjectName
 {
@@ -25,8 +27,11 @@ namespace YourProjectName
                 try
                 {
                     var context = services.GetRequiredService<AppDbContext>();
+                    var configuration = services.GetRequiredService<IConfiguration>();
+                    var environment = services.GetRequiredService<IWebHostEnvironment>();
+                    
                     await context.Database.MigrateAsync();
-                    await SeedData(context);
+                    await SeedData(context, configuration, environment);
                 }
                 catch (Exception ex)
                 {
@@ -45,100 +50,101 @@ namespace YourProjectName
                     webBuilder.UseStartup<Startup>();
                 });
                 
-        private static async Task SeedData(AppDbContext context)
+        private static async Task SeedData(AppDbContext context, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            // Check if admin user exists
+            // Create admin user if none exists
             if (!await context.Users.AnyAsync())
             {
-                // Create admin user
                 var passwordHasher = new PasswordHasher<User>();
+                
+                // Get admin credentials from configuration with environment variable resolution
+                var adminUsername = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Username") ?? "admin";
+                var adminEmail = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Email") ?? "admin@example.com";
+                var adminPassword = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Password") ?? "Admin123!";
                 
                 var adminUser = new User
                 {
-                    Username = "admin",
-                    Email = "admin@example.com",
+                    Username = adminUsername,
+                    Email = adminEmail,
                     Role = "Admin",
                     CreatedAt = DateTime.UtcNow
                 };
                 
-                adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "Admin123!");
-                
+                adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, adminPassword);
                 context.Users.Add(adminUser);
 
-                var testUser = new User
+                // Only create test user in development
+                if (environment.IsDevelopment())
                 {
-                    Username = "testuser",
-                    Email = "testuser@example.com",
-                    Role = "User",
-                    CreatedAt = DateTime.UtcNow
-                };
+                    var testUser = new User
+                    {
+                        Username = "testuser",
+                        Email = "testuser@example.com",
+                        Role = "User",
+                        CreatedAt = DateTime.UtcNow
+                    };
                     testUser.PasswordHash = passwordHasher.HashPassword(testUser, "Test123!");
                     context.Users.Add(testUser);
+                }
 
                 await context.SaveChangesAsync();
             }
             
-    // Seed Categories
-    if (!await context.Categories.AnyAsync())
-    {
-        context.Categories.AddRange(
-            new Category { Name = "Technology", Slug = "technology", PostCategories = new List<PostCategory>() },
-            new Category { Name = "Lifestyle", Slug = "lifestyle", PostCategories = new List<PostCategory>() }
-        );
-        await context.SaveChangesAsync();
-    }
-
-    // Seed Tags
-    if (!await context.Tags.AnyAsync())
-    {
-        context.Tags.AddRange(
-            new Tag { Name = "ASP.NET", Slug = "asp-net", PostTags = new List<PostTag>() },
-            new Tag { Name = "Angular", Slug = "angular", PostTags = new List<PostTag>() }
-        );
-        await context.SaveChangesAsync();
-    }
-
-    // Seed Posts
-    if (!await context.Posts.AnyAsync())
-    {
-        var adminUser = await context.Users.FirstOrDefaultAsync(u => u.Username == "admin");
-        var techCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Technology");
-        if (techCategory == null)
-        {
-            throw new InvalidOperationException("Technology category not found. Please ensure the category is seeded correctly.");
-        }
-
-        if (adminUser == null)
-        {
-            throw new InvalidOperationException("Admin user not found. Please ensure the admin user is seeded correctly.");
-        }
-
-        var post = new Post
-        {
-            Title = "Getting Started with ASP.NET Core",
-            Content = "This is a sample post about ASP.NET Core.",
-            Slug = "getting-started-with-asp-net-core",
-            IsPublished = true,
-            CreatedAt = DateTime.UtcNow,
-            AuthorId = adminUser.Id,
-            PostCategories = new List<PostCategory>
+            // Seed Categories
+            if (!await context.Categories.AnyAsync())
             {
-                new PostCategory { CategoryId = techCategory.Id }
-            },
-            PostTags = new List<PostTag>
+                context.Categories.AddRange(
+                    new Category { Name = "Technology", Slug = "technology", PostCategories = new List<PostCategory>() },
+                    new Category { Name = "Lifestyle", Slug = "lifestyle", PostCategories = new List<PostCategory>() }
+                );
+                await context.SaveChangesAsync();
+            }
+
+            // Seed Tags
+            if (!await context.Tags.AnyAsync())
             {
-                new PostTag 
-                { 
-                    TagId = (await context.Tags.FirstOrDefaultAsync(t => t.Name == "ASP.NET"))?.Id 
-                        ?? throw new InvalidOperationException("ASP.NET tag not found. Please ensure the tag is seeded correctly.") 
+                context.Tags.AddRange(
+                    new Tag { Name = "ASP.NET", Slug = "asp-net", PostTags = new List<PostTag>() },
+                    new Tag { Name = "Angular", Slug = "angular", PostTags = new List<PostTag>() }
+                );
+                await context.SaveChangesAsync();
+            }
+
+            // Only seed sample posts in development environment
+            if (environment.IsDevelopment() && !await context.Posts.AnyAsync())
+            {
+                var adminUser = await context.Users.FirstOrDefaultAsync(u => u.Role == "Admin");
+                var techCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Technology");
+                
+                if (techCategory != null && adminUser != null)
+                {
+                    var post = new Post
+                    {
+                        Title = "Getting Started with ASP.NET Core",
+                        Content = "This is a sample post about ASP.NET Core.",
+                        Slug = "getting-started-with-asp-net-core",
+                        IsPublished = true,
+                        CreatedAt = DateTime.UtcNow,
+                        AuthorId = adminUser.Id,
+                        PostCategories = new List<PostCategory>
+                        {
+                            new PostCategory { CategoryId = techCategory.Id }
+                        },
+                        PostTags = new List<PostTag>
+                        {
+                            new PostTag 
+                            { 
+                                TagId = (await context.Tags.FirstOrDefaultAsync(t => t.Name == "ASP.NET"))?.Id 
+                                    ?? throw new InvalidOperationException("ASP.NET tag not found. Please ensure the tag is seeded correctly.") 
+                            }
+                        },
+                        Author = adminUser
+                    };
+
+                    context.Posts.Add(post);
+                    await context.SaveChangesAsync();
                 }
-            },
-            Author = adminUser
-        };
-
-        context.Posts.Add(post);
-        await context.SaveChangesAsync();
-    }
+            }
         }
         
     }

@@ -1,0 +1,14 @@
+bin/
+obj/
+*.db
+*.db-shm
+*.db-wal
+.git/
+.vs/
+.vscode/
+node_modules/
+dist/
+Dockerfile
+.dockerignore
+README.md
+.gitignore 

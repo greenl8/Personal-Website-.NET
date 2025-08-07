@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: greenl8site
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    region: oregon
+    branch: main
+    buildCommand: ""
+    startCommand: ""
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: DATABASE_URL
+        fromDatabase:
+          name: greenl8site-db
+          property: connectionString
+      - key: TOKEN_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_EMAIL
+        value: admin@yourdomain.com
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: BASE_URL
+        value: https://greenl8site.onrender.com
+
+databases:
+  - name: greenl8site-db
+    databaseName: greenl8site
+    plan: starter 

@@ -16,8 +16,41 @@ namespace YourProjectName.Data
         public DbSet<PostCategory> PostCategories { get; set; }
         public DbSet<PostTag> PostTags { get; set; }
         
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Suppress the pending model changes warning for production
+            optionsBuilder.ConfigureWarnings(warnings => 
+                warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+        }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configure User Id to be auto-generated
+            modelBuilder.Entity<User>()
+                .Property(u => u.Id)
+                .ValueGeneratedOnAdd();
+
+            // Configure other primary keys to auto-generate (PostgreSQL identity)
+            modelBuilder.Entity<Category>()
+                .Property(c => c.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Tag>()
+                .Property(t => t.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Post>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Page>()
+                .Property(pg => pg.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Media>()
+                .Property(m => m.Id)
+                .ValueGeneratedOnAdd();
+
             // Configure many-to-many relationship between Post and Category
             modelBuilder.Entity<PostCategory>()
                 .HasKey(pc => new { pc.PostId, pc.CategoryId });
