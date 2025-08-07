@@ -58,7 +58,8 @@ ASPNETCORE_ENVIRONMENT=Production
 ASPNETCORE_URLS=http://+:8080
 
 # Database (use the Railway PostgreSQL URL from Step 1.2)
-DATABASE_URL=postgresql://postgres:MHJDNikCqhnKtrmczOQZttUlWdzcDdRi@postgres.railway.internal:5432/railway
+DATABASE_URL=
+postgresql://postgres:MHJDNikCqhnKtrmczOQZttUlWdzcDdRi@switchyard.proxy.rlwy.net:46150/railway
 
 # JWT Security (generate a secure 32+ character key)
 TOKEN_KEY=#g<*dnSC>wrr2V|Yk3o;VHa!wm'9^Z@M

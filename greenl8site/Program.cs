@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using YourProjectName.Data;
 using YourProjectName.Models;
 using YourProjectName.Services;
+using System.Collections.Generic; // Added for List<PostCategory> and List<PostTag>
+using System.Linq; // Added for AnyAsync and FirstOrDefaultAsync
+using Npgsql; // Added for Npgsql.PostgresException
 
 namespace YourProjectName
 {
@@ -29,14 +32,75 @@ namespace YourProjectName
                     var context = services.GetRequiredService<AppDbContext>();
                     var configuration = services.GetRequiredService<IConfiguration>();
                     var environment = services.GetRequiredService<IWebHostEnvironment>();
+                    var logger = services.GetRequiredService<ILogger<Program>>();
                     
-                    await context.Database.MigrateAsync();
+                    // Check if database exists and is accessible
+                    bool canConnect = await context.Database.CanConnectAsync();
+                    logger.LogInformation($"Database connection test: {(canConnect ? "SUCCESS" : "FAILED")}");
+                    
+                    if (canConnect)
+                    {
+                        // Try to migrate, but handle specific migration conflicts
+                        try
+                        {
+                            await context.Database.MigrateAsync();
+                            logger.LogInformation("Database migration completed successfully");
+                        }
+                        catch (Npgsql.PostgresException pgEx) when (pgEx.SqlState == "55000" && pgEx.MessageText?.Contains("already an identity column") == true)
+                        {
+                            logger.LogWarning("Identity column conflict detected. Attempting to recover...");
+                            
+                            // Try to ensure the database schema is consistent
+                            try
+                            {
+                                await context.Database.EnsureCreatedAsync();
+                                logger.LogInformation("Database schema ensured");
+                            }
+                            catch (Exception ensureEx)
+                            {
+                                logger.LogWarning(ensureEx, "EnsureCreated also failed, proceeding with existing schema");
+                            }
+                        }
+                        catch (Exception migEx)
+                        {
+                            logger.LogError(migEx, "Migration failed, trying EnsureCreated as fallback");
+                            
+                            // Fallback to EnsureCreated for development
+                            try
+                            {
+                                await context.Database.EnsureCreatedAsync();
+                                logger.LogInformation("Database created with EnsureCreated fallback");
+                            }
+                            catch (Exception ensureEx)
+                            {
+                                logger.LogError(ensureEx, "Both migration and EnsureCreated failed");
+                                throw;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        logger.LogError("Cannot connect to database");
+                        throw new InvalidOperationException("Database connection failed");
+                    }
+                    
                     await SeedData(context, configuration, environment);
                 }
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred during migration");
+                    logger.LogError(ex, "An error occurred during database initialization");
+                    
+                    // In production, we want the app to continue running even if migration fails
+                    // so users can still access the site (though admin features might not work)
+                    if (services.GetRequiredService<IWebHostEnvironment>().IsProduction())
+                    {
+                        logger.LogWarning("Continuing application startup despite database issues (Production mode)");
+                    }
+                    else
+                    {
+                        throw; // In development, fail fast to make issues obvious
+                    }
                 }
             }
             

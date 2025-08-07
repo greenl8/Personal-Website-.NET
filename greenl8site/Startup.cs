@@ -58,9 +58,14 @@ namespace YourProjectName
             // Handle environment variable substitution for TokenKey
             var tokenKey = EnvironmentService.GetResolvedValue(_config, "TokenKey");
             
+            // Debug logging for TokenKey configuration
+            Console.WriteLine($"TokenKey from config: {(!string.IsNullOrEmpty(_config["TokenKey"]) ? "SET" : "NOT SET")}");
+            Console.WriteLine($"TOKEN_KEY environment variable: {(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TOKEN_KEY")) ? "SET" : "NOT SET")}");
+            Console.WriteLine($"Resolved TokenKey: {(!string.IsNullOrEmpty(tokenKey) ? "HAS VALUE" : "NULL/EMPTY")}");
+            
             if (string.IsNullOrEmpty(tokenKey))
             {
-                throw new InvalidOperationException("TokenKey is not configured in application settings");
+                throw new InvalidOperationException("TokenKey is not configured in application settings. Please ensure TOKEN_KEY environment variable is set or TokenKey is configured in appsettings.json");
             }
             
             // Add authentication
