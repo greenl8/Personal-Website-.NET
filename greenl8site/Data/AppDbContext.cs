@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using YourProjectName.Models;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace YourProjectName.Data
 {
@@ -28,7 +29,7 @@ namespace YourProjectName.Data
             // Configure User Id to be auto-generated
             modelBuilder.Entity<User>()
                 .Property(u => u.Id)
-                .ValueGeneratedOnAdd();
+                .UseIdentityByDefaultColumn();
 
             // Configure other primary keys to auto-generate (PostgreSQL identity)
             modelBuilder.Entity<Category>()
