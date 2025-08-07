@@ -35,7 +35,7 @@ namespace greenl8site.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("YourProjectName.Models.Media", b =>
@@ -72,7 +72,7 @@ namespace greenl8site.Migrations
 
                     b.HasIndex("UploadedById");
 
-                    b.ToTable("Media");
+                    b.ToTable("Media", (string)null);
                 });
 
             modelBuilder.Entity("YourProjectName.Models.Page", b =>
@@ -111,7 +111,7 @@ namespace greenl8site.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Pages");
+                    b.ToTable("Pages", (string)null);
                 });
 
             modelBuilder.Entity("YourProjectName.Models.Post", b =>
@@ -165,7 +165,7 @@ namespace greenl8site.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("YourProjectName.Models.PostCategory", b =>
@@ -180,7 +180,7 @@ namespace greenl8site.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("PostCategories");
+                    b.ToTable("PostCategories", (string)null);
                 });
 
             modelBuilder.Entity("YourProjectName.Models.PostTag", b =>
@@ -195,7 +195,7 @@ namespace greenl8site.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("PostTags");
+                    b.ToTable("PostTags", (string)null);
                 });
 
             modelBuilder.Entity("YourProjectName.Models.Tag", b =>
@@ -216,7 +216,7 @@ namespace greenl8site.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("YourProjectName.Models.User", b =>
@@ -248,7 +248,7 @@ namespace greenl8site.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("YourProjectName.Models.Media", b =>
