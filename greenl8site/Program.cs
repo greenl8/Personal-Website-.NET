@@ -296,7 +296,7 @@ BEGIN
       END IF;
 
       -- Align sequence value with current MAX(Id) to avoid collisions
-      PERFORM setval(''""Users_Id_seq""'', COALESCE((SELECT MAX(""Id"") FROM ""Users""), 0));
+      PERFORM setval('""Users_Id_seq""', COALESCE((SELECT MAX(""Id"") FROM ""Users""), 0));
     END IF;
   END IF;
 END $$;";
