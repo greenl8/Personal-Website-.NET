@@ -19,10 +19,12 @@ namespace YourProjectName
     public class Startup
     {
         private readonly IConfiguration _config;
+        private readonly IWebHostEnvironment _env;
         
-        public Startup(IConfiguration config)
+        public Startup(IConfiguration config, IWebHostEnvironment env)
         {
             _config = config;
+            _env = env;
         }
         
         public void ConfigureServices(IServiceCollection services)
@@ -34,13 +36,45 @@ namespace YourProjectName
             {
                 // SQLite for development
                 services.AddDbContext<AppDbContext>(options =>
-                    options.UseSqlite(connectionString));
+                {
+                    options.UseSqlite(connectionString);
+                    
+                    if (_env.IsDevelopment())
+                    {
+                        options.EnableSensitiveDataLogging();
+                        options.EnableDetailedErrors();
+                    }
+                });
             }
             else if (!string.IsNullOrEmpty(connectionString))
             {
-                // PostgreSQL for production (Fly.io uses PostgreSQL)
+                // PostgreSQL for production (Fly.io, Railway, Render, etc.)
                 services.AddDbContext<AppDbContext>(options =>
-                    options.UseNpgsql(connectionString));
+                {
+                    options.UseNpgsql(connectionString, npgsqlOptions =>
+                    {
+                        // Enable retry on failure for better resilience
+                        npgsqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: _config.GetValue("Database:MaxRetryCount", 3),
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorCodesToAdd: null);
+                        
+                        // Set command timeout
+                        npgsqlOptions.CommandTimeout(_config.GetValue("Database:CommandTimeout", 30));
+                    });
+                    
+                    // Configure logging based on environment
+                    if (_env.IsDevelopment())
+                    {
+                        options.EnableSensitiveDataLogging();
+                        options.EnableDetailedErrors();
+                    }
+                    else
+                    {
+                        // Production: disable sensitive data logging for security
+                        options.EnableSensitiveDataLogging(_config.GetValue("Database:EnableSensitiveDataLogging", false));
+                    }
+                });
             }
             else
             {
@@ -127,8 +161,8 @@ namespace YourProjectName
                               "http://localhost:4200",  // Default Angular port
                               "http://localhost:4201",  // Alternative Angular port
                               "http://192.168.0.81:4200", // Mobile access
-                              "https://greenl8site.fly.dev", // Fly.io deployment URL
-                              "https://your-app-name.azurewebsites.net" // Add your Azure URL here
+                              "https://your-app-name.azurewebsites.net",
+                              "https://greenl8site.onrender.com" // Add your Azure URL here
                           );
                 });
             });
