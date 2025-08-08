@@ -80,6 +80,9 @@ namespace YourProjectName
 
                         // Ensure Users.Id auto-generates in PostgreSQL even if prior migrations were SQLite-based
                         await EnsureUsersIdAutoGenerationAsync(context, logger);
+
+                        // Ensure DateTime columns are correctly typed in PostgreSQL (convert from TEXT to timestamptz when needed)
+                        await EnsureDateTimeColumnsAreCorrectTypeAsync(context, logger);
                     }
                     else
                     {
@@ -308,6 +311,96 @@ END $$;";
             catch (Exception ex)
             {
                 logger.LogWarning(ex, "Failed to enforce Users.Id auto-generation. Continuing.");
+            }
+        }
+
+        private static async Task EnsureDateTimeColumnsAreCorrectTypeAsync(AppDbContext context, ILogger logger)
+        {
+            try
+            {
+                if (context.Database.IsNpgsql())
+                {
+                    const string fixDateColumnsSql = @"DO $$
+BEGIN
+  -- Users.CreatedAt
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'Users'
+      AND column_name = 'CreatedAt'
+      AND data_type = 'text'
+  ) THEN
+    EXECUTE 'ALTER TABLE ""Users"" ALTER COLUMN ""CreatedAt"" TYPE timestamp with time zone USING (""CreatedAt""::timestamptz)';
+  END IF;
+
+  -- Posts date columns
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'Posts'
+      AND column_name = 'CreatedAt'
+      AND data_type = 'text'
+  ) THEN
+    EXECUTE 'ALTER TABLE ""Posts"" ALTER COLUMN ""CreatedAt"" TYPE timestamp with time zone USING (""CreatedAt""::timestamptz)';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'Posts'
+      AND column_name = 'PublishedAt'
+      AND data_type = 'text'
+  ) THEN
+    EXECUTE 'ALTER TABLE ""Posts"" ALTER COLUMN ""PublishedAt"" TYPE timestamp with time zone USING (""PublishedAt""::timestamptz)';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'Posts'
+      AND column_name = 'UpdatedAt'
+      AND data_type = 'text'
+  ) THEN
+    EXECUTE 'ALTER TABLE ""Posts"" ALTER COLUMN ""UpdatedAt"" TYPE timestamp with time zone USING (""UpdatedAt""::timestamptz)';
+  END IF;
+
+  -- Pages date columns
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'Pages'
+      AND column_name = 'CreatedAt'
+      AND data_type = 'text'
+  ) THEN
+    EXECUTE 'ALTER TABLE ""Pages"" ALTER COLUMN ""CreatedAt"" TYPE timestamp with time zone USING (""CreatedAt""::timestamptz)';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'Pages'
+      AND column_name = 'UpdatedAt'
+      AND data_type = 'text'
+  ) THEN
+    EXECUTE 'ALTER TABLE ""Pages"" ALTER COLUMN ""UpdatedAt"" TYPE timestamp with time zone USING (""UpdatedAt""::timestamptz)';
+  END IF;
+
+  -- Media.UploadedAt
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'Media'
+      AND column_name = 'UploadedAt'
+      AND data_type = 'text'
+  ) THEN
+    EXECUTE 'ALTER TABLE ""Media"" ALTER COLUMN ""UploadedAt"" TYPE timestamp with time zone USING (""UploadedAt""::timestamptz)';
+  END IF;
+END $$;";
+
+                    await context.Database.ExecuteSqlRawAsync(fixDateColumnsSql);
+                    logger.LogInformation("Ensured DateTime columns use PostgreSQL timestamp with time zone instead of text");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to coerce DateTime columns to proper PostgreSQL types. Continuing.");
             }
         }
         
