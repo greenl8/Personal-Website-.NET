@@ -261,14 +261,13 @@ BEGIN
     -- Ensure there is a proper sequence-based default if identity is not in effect
     IF NOT EXISTS (
       SELECT 1
-      FROM pg_attrdef d
-      JOIN pg_attribute a ON a.attrelid = d.adrelid AND a.attnum = d.adnum
-      JOIN pg_class t ON t.oid = d.adrelid
+      FROM pg_attribute a
+      JOIN pg_class t ON a.attrelid = t.oid
       JOIN pg_namespace n ON n.oid = t.relnamespace
       WHERE n.nspname = current_schema()
         AND t.relname = 'Users'
         AND a.attname = 'Id'
-        AND pg_get_expr(d.adbin, d.adrelid) LIKE 'nextval%'
+        AND a.attidentity IN ('a','d')
     ) THEN
       -- Create a sequence if it does not exist
       IF NOT EXISTS (
@@ -281,24 +280,36 @@ BEGIN
         EXECUTE 'CREATE SEQUENCE ""Users_Id_seq""';
       END IF;
       -- Attach the sequence as default and ownership
-      EXECUTE 'ALTER TABLE ""Users"" ALTER COLUMN ""Id"" SET DEFAULT nextval(''""Users_Id_seq""''::regclass)';
-      EXECUTE 'ALTER SEQUENCE ""Users_Id_seq"" OWNED BY ""Users"".""Id""';
-    END IF;
+      IF NOT EXISTS (
+        SELECT 1
+        FROM pg_attrdef d
+        JOIN pg_attribute a ON a.attrelid = d.adrelid AND a.attnum = d.adnum
+        JOIN pg_class t ON t.oid = d.adrelid
+        JOIN pg_namespace n ON n.oid = t.relnamespace
+        WHERE n.nspname = current_schema()
+          AND t.relname = 'Users'
+          AND a.attname = 'Id'
+          AND pg_get_expr(d.adbin, d.adrelid) LIKE 'nextval%'
+      ) THEN
+        EXECUTE 'ALTER TABLE ""Users"" ALTER COLUMN ""Id"" SET DEFAULT nextval(''""Users_Id_seq""''::regclass)';
+        EXECUTE 'ALTER SEQUENCE ""Users_Id_seq"" OWNED BY ""Users"".""Id""';
+      END IF;
 
-    -- Align sequence value with current MAX(Id) to avoid collisions
-    PERFORM setval('""Users_Id_seq""', COALESCE((SELECT MAX(""Id"") FROM ""Users""), 0));
+      -- Align sequence value with current MAX(Id) to avoid collisions
+      PERFORM setval(''""Users_Id_seq""'', COALESCE((SELECT MAX(""Id"") FROM ""Users""), 0));
+    END IF;
   END IF;
 END $$;";
 
                      await context.Database.ExecuteSqlRawAsync(sql);
                      logger.LogInformation("Ensured Users.Id is auto-generated (identity/default) and sequence aligned");
                  }
-             }
-             catch (Exception ex)
-             {
-                 logger.LogWarning(ex, "Failed to enforce Users.Id auto-generation. Continuing.");
-             }
-         }
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to enforce Users.Id auto-generation. Continuing.");
+            }
+        }
         
     }
 }
