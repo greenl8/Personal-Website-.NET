@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HelloWorldService {
-  private apiUrl = 'http://localhost:5046/api/test'; // Adjust port as needed for your .NET app
+  private apiUrl = environment.apiUrl + 'test';
 
   constructor(private http: HttpClient) { }
 
