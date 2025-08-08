@@ -22,6 +22,6 @@ services:
       - key: ADMIN_EMAIL
         value: judeasmith4@gmail.com
       - key: ADMIN_PASSWORD
-        value: "5m1th4445m5!Q"
+        value: "doogan"
       - key: BASE_URL
         value: https://greenl8site.onrender.com 

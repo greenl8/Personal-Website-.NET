@@ -29,12 +29,12 @@ namespace YourProjectName.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            if (await _context.Users.AnyAsync(u => u.Username.ToLower() == registerDto.Username.ToLower()))
+            if (await _context.Users.AnyAsync(u => EF.Functions.ILike(u.Username, registerDto.Username)))
             {
                 return BadRequest("Username is already taken");
             }
             
-            if (await _context.Users.AnyAsync(u => u.Email.ToLower() == registerDto.Email.ToLower()))
+            if (await _context.Users.AnyAsync(u => EF.Functions.ILike(u.Email, registerDto.Email)))
             {
                 return BadRequest("Email is already taken");
             }
@@ -64,7 +64,7 @@ namespace YourProjectName.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _context.Users
-                .SingleOrDefaultAsync(u => u.Username.ToLower() == loginDto.Username.ToLower());
+                .FirstOrDefaultAsync(u => EF.Functions.ILike(u.Username, loginDto.Username));
                 
             if (user == null)
             {
@@ -96,7 +96,7 @@ namespace YourProjectName.Controllers
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
             
             var user = await _context.Users
-                .SingleOrDefaultAsync(u => u.Username.ToLower() == username!.ToLower());
+                .SingleOrDefaultAsync(u => EF.Functions.ILike(u.Username, username!));
                 
                 if (user == null)
                 {
