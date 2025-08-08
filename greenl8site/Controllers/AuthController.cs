@@ -29,12 +29,12 @@ namespace YourProjectName.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            if (await _context.Users.AnyAsync(u => u.Username == registerDto.Username))
+            if (await _context.Users.AnyAsync(u => u.Username.ToLower() == registerDto.Username.ToLower()))
             {
                 return BadRequest("Username is already taken");
             }
             
-            if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
+            if (await _context.Users.AnyAsync(u => u.Email.ToLower() == registerDto.Email.ToLower()))
             {
                 return BadRequest("Email is already taken");
             }
@@ -64,7 +64,7 @@ namespace YourProjectName.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _context.Users
-                .SingleOrDefaultAsync(u => u.Username == loginDto.Username);
+                .SingleOrDefaultAsync(u => u.Username.ToLower() == loginDto.Username.ToLower());
                 
             if (user == null)
             {
@@ -96,7 +96,7 @@ namespace YourProjectName.Controllers
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
             
             var user = await _context.Users
-                .SingleOrDefaultAsync(u => u.Username == username);
+                .SingleOrDefaultAsync(u => u.Username.ToLower() == username!.ToLower());
                 
                 if (user == null)
                 {

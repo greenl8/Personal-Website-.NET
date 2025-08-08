@@ -41,17 +41,17 @@ namespace YourProjectName.Controllers
             // Apply filters
             if (filter.IsPublished.HasValue)
             {
-                query = query.Where(p => p.IsPublished == filter.IsPublished);
+                query = query.Where(p => p.IsPublished == filter.IsPublished.Value);
             }
             
             if (filter.CategoryId.HasValue)
             {
-                query = query.Where(p => p.PostCategories.Any(pc => pc.CategoryId == filter.CategoryId));
+                query = query.Where(p => p.PostCategories.Any(pc => pc.CategoryId == filter.CategoryId.Value));
             }
             
             if (filter.TagId.HasValue)
             {
-                query = query.Where(p => p.PostTags.Any(pt => pt.TagId == filter.TagId));
+                query = query.Where(p => p.PostTags.Any(pt => pt.TagId == filter.TagId.Value));
             }
             
             if (!string.IsNullOrEmpty(filter.SearchTerm))

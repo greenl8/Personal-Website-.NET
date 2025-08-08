@@ -32,7 +32,7 @@ namespace YourProjectName.Services
             string fileType = file.ContentType;
             
             // Create year/month folders for better organization
-            string dateFolder = DateTime.Now.ToString("yyyy/MM");
+            string dateFolder = DateTime.UtcNow.ToString("yyyy/MM");
             string relativePath = Path.Combine(dateFolder, fileName);
             string fullPath = Path.Combine(_uploadDirectory, relativePath);
             
