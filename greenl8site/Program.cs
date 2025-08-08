@@ -166,8 +166,8 @@ namespace YourProjectName
             if (!await context.Categories.AnyAsync())
             {
                 context.Categories.AddRange(
-                    new Category { Name = "Technology", Slug = "technology", PostCategories = new List<PostCategory>() },
-                    new Category { Name = "Lifestyle", Slug = "lifestyle", PostCategories = new List<PostCategory>() }
+                    new Category { Id = 1, Name = "Technology", Slug = "technology", PostCategories = new List<PostCategory>() },
+                    new Category { Id = 2, Name = "Lifestyle", Slug = "lifestyle", PostCategories = new List<PostCategory>() }
                 );
                 await context.SaveChangesAsync();
             }
@@ -176,8 +176,8 @@ namespace YourProjectName
             if (!await context.Tags.AnyAsync())
             {
                 context.Tags.AddRange(
-                    new Tag { Name = "ASP.NET", Slug = "asp-net", PostTags = new List<PostTag>() },
-                    new Tag { Name = "Angular", Slug = "angular", PostTags = new List<PostTag>() }
+                    new Tag { Id = 1, Name = "ASP.NET", Slug = "asp-net", PostTags = new List<PostTag>() },
+                    new Tag { Id = 2, Name = "Angular", Slug = "angular", PostTags = new List<PostTag>() }
                 );
                 await context.SaveChangesAsync();
             }
