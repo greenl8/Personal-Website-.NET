@@ -125,20 +125,7 @@ namespace YourProjectName
                 // Create admin user if none exists
                 if (!await context.Users.AnyAsync())
                 {
-                    var passwordHasher = new PasswordHasher<User>();
                     
-                    // Get admin credentials from configuration with environment variable resolution
-                    var adminUsername = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Username") ?? "admin";
-                    var adminEmail = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Email") ?? "admin@example.com";
-                    var adminPassword = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Password") ?? "Admin123!";
-                    
-                    var adminUser = new User
-                    {
-                        Username = adminUsername,
-                        Email = adminEmail,
-                        Role = "Admin",
-                        CreatedAt = DateTime.UtcNow
-                    };
                     
                     adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, adminPassword);
                     context.Users.Add(adminUser);
