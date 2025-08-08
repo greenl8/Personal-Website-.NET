@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class HelloWorldService {
+  // Updated for HTTPS compatibility - v1.0.2
   private apiUrl = environment.apiUrl + 'test';
 
   constructor(private http: HttpClient) { }

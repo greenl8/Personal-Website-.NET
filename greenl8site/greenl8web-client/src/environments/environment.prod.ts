@@ -1,4 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: '/api/'
+    apiUrl: '/api/',
+    version: '1.0.2' // Force cache bust
   };
