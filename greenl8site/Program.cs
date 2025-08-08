@@ -119,42 +119,46 @@ namespace YourProjectName
                 
         private static async Task SeedData(AppDbContext context, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            // Create admin user if none exists
-            if (!await context.Users.AnyAsync())
+            // Skip creating admin (and any users) in Production. You will manage users manually.
+            if (!environment.IsProduction())
             {
-                var passwordHasher = new PasswordHasher<User>();
-                
-                // Get admin credentials from configuration with environment variable resolution
-                var adminUsername = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Username") ?? "admin";
-                var adminEmail = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Email") ?? "admin@example.com";
-                var adminPassword = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Password") ?? "Admin123!";
-                
-                var adminUser = new User
+                // Create admin user if none exists
+                if (!await context.Users.AnyAsync())
                 {
-                    Username = adminUsername,
-                    Email = adminEmail,
-                    Role = "Admin",
-                    CreatedAt = DateTime.UtcNow
-                };
-                
-                adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, adminPassword);
-                context.Users.Add(adminUser);
-
-                // Only create test user in development
-                if (environment.IsDevelopment())
-                {
-                    var testUser = new User
+                    var passwordHasher = new PasswordHasher<User>();
+                    
+                    // Get admin credentials from configuration with environment variable resolution
+                    var adminUsername = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Username") ?? "admin";
+                    var adminEmail = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Email") ?? "admin@example.com";
+                    var adminPassword = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Password") ?? "Admin123!";
+                    
+                    var adminUser = new User
                     {
-                        Username = "testuser",
-                        Email = "testuser@example.com",
-                        Role = "User",
+                        Username = adminUsername,
+                        Email = adminEmail,
+                        Role = "Admin",
                         CreatedAt = DateTime.UtcNow
                     };
-                    testUser.PasswordHash = passwordHasher.HashPassword(testUser, "Test123!");
-                    context.Users.Add(testUser);
-                }
+                    
+                    adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, adminPassword);
+                    context.Users.Add(adminUser);
 
-                await context.SaveChangesAsync();
+                    // Only create test user in development
+                    if (environment.IsDevelopment())
+                    {
+                        var testUser = new User
+                        {
+                            Username = "testuser",
+                            Email = "testuser@example.com",
+                            Role = "User",
+                            CreatedAt = DateTime.UtcNow
+                        };
+                        testUser.PasswordHash = passwordHasher.HashPassword(testUser, "Test123!");
+                        context.Users.Add(testUser);
+                    }
+
+                    await context.SaveChangesAsync();
+                }
             }
             
             // Seed Categories
