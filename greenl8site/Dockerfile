@@ -13,7 +13,7 @@ COPY . ./
 WORKDIR /app/greenl8web-client
 RUN apt-get update && apt-get install -y nodejs npm
 RUN npm install
-RUN npm run build
+RUN npm run build -- --configuration production
 
 # Build the .NET application
 WORKDIR /app
@@ -26,8 +26,8 @@ WORKDIR /app
 # Copy the published application
 COPY --from=build /app/out .
 
-# Copy the built Angular app to wwwroot
-COPY --from=build /app/greenl8web-client/dist/greenl8web-client ./wwwroot
+# Copy the built Angular app browser output to wwwroot (for SSR builds)
+COPY --from=build /app/greenl8web-client/dist/greenl8web-client/browser ./wwwroot
 
 # Create uploads directory
 RUN mkdir -p wwwroot/uploads
