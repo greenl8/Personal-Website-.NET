@@ -1,9 +1,13 @@
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using YourProjectName.Data;
 
 #nullable disable
 
 namespace greenl8site.Migrations
 {
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20250808100000_EnsureUsersIdIdentity")]
     public partial class EnsureUsersIdIdentity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
