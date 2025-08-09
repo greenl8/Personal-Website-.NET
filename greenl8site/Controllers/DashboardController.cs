@@ -31,7 +31,7 @@ namespace greenl8site.Controllers
                     PendingCommentCount = 0,
                     UserCount = await _context.Users.CountAsync(),
                     NewUserCount = await _context.Users.CountAsync(u => u.CreatedAt >= DateTime.UtcNow.AddDays(-7)),
-                    ViewCount = GenerateRandomViewCount(),
+                    ViewCount = 0,
                     RecentDrafts = await _context.Posts
                         .Where(p => !p.IsPublished)
                         .OrderByDescending(p => p.UpdatedAt)
@@ -44,7 +44,7 @@ namespace greenl8site.Controllers
                         })
                         .ToArrayAsync(),
                     RecentComments = Array.Empty<CommentDto>(),
-                    TrafficData = GenerateTrafficData()
+                    TrafficData = Array.Empty<ChartDataPoint>()
                 };
 
                 return Ok(summary);
@@ -60,11 +60,8 @@ namespace greenl8site.Controllers
         {
             try
             {
-                var start = startDate ?? DateTime.UtcNow.AddDays(-7);
-                var end = endDate ?? DateTime.UtcNow;
-                
-                var data = GenerateStatisticsData(start, end, interval);
-                return Ok(data);
+                // No analytics implemented yet; return empty series
+                return Ok(Array.Empty<StatisticsData>());
             }
             catch (Exception ex)
             {
@@ -72,117 +69,23 @@ namespace greenl8site.Controllers
             }
         }
 
-        private StatisticsData[] GenerateStatisticsData(DateTime startDate, DateTime endDate, string interval)
-        {
-            var data = new List<StatisticsData>();
-            var random = new Random();
-            var currentDate = startDate;
+        // Removed mock statistics generator
 
-            while (currentDate <= endDate)
-            {
-                // Generate realistic random data with patterns
-                var baseViews = 450 + random.Next(200);
-                var baseVisitors = (int)(baseViews * (0.6 + random.NextDouble() * 0.3));
-                var baseLikes = (int)(baseViews * (0.05 + random.NextDouble() * 0.1));
-                var baseComments = (int)(baseViews * (0.02 + random.NextDouble() * 0.05));
+        // Removed date formatting helper for mock data
 
-                // Add weekly patterns (lower on weekends)
-                var dayOfWeek = (int)currentDate.DayOfWeek;
-                var weekendMultiplier = (dayOfWeek == 0 || dayOfWeek == 6) ? 0.7 : 1.2;
+        // Removed week number helper for mock data
 
-                data.Add(new StatisticsData
-                {
-                    Views = (int)(baseViews * weekendMultiplier),
-                    Visitors = (int)(baseVisitors * weekendMultiplier),
-                    Likes = (int)(baseLikes * weekendMultiplier),
-                    Comments = (int)(baseComments * weekendMultiplier),
-                    Date = FormatDateForInterval(currentDate, interval)
-                });
+        // Removed mock traffic generator
 
-                // Increment date based on interval
-                currentDate = interval switch
-                {
-                    "days" => currentDate.AddDays(1),
-                    "weeks" => currentDate.AddDays(7),
-                    "months" => currentDate.AddMonths(1),
-                    "years" => currentDate.AddYears(1),
-                    _ => currentDate.AddDays(1)
-                };
-            }
-
-            return data.ToArray();
-        }
-
-        private string FormatDateForInterval(DateTime date, string interval)
-        {
-            return interval switch
-            {
-                "days" => date.ToString("MMM dd"),
-                "weeks" => $"Week {GetWeekNumber(date)}",
-                "months" => date.ToString("MMM yyyy"),
-                "years" => date.ToString("yyyy"),
-                _ => date.ToString("MMM dd")
-            };
-        }
-
-        private int GetWeekNumber(DateTime date)
-        {
-            var firstDayOfYear = new DateTime(date.Year, 1, 1);
-            var pastDaysOfYear = (date - firstDayOfYear).Days;
-            return (pastDaysOfYear + (int)firstDayOfYear.DayOfWeek + 1) / 7;
-        }
-
-        private ChartDataPoint[] GenerateTrafficData()
-        {
-            var random = new Random();
-            var now = DateTime.UtcNow;
-            return Enumerable.Range(0, 7)
-                .Select(i => new ChartDataPoint
-                {
-                    Label = now.AddDays(-i).ToString("MM/dd"),
-                    Value = random.Next(200, 800)
-                })
-                .Reverse()
-                .ToArray();
-        }
-
-        private int GenerateRandomViewCount()
-        {
-            var random = new Random();
-            return random.Next(100, 1000);
-        }
+        // Removed mock view count generator
 
         [HttpGet("activities")]
         public ActionResult<ActivityLogDto[]> GetActivities()
         {
             try
             {
-                // Generate sample activities for demo
-                var activities = new[]
-                {
-                    new ActivityLogDto
-                    {
-                        Id = 1,
-                        Type = "post_created",
-                        User = "Admin",
-                        Message = "Created new post",
-                        Timestamp = DateTime.UtcNow.AddHours(-2),
-                        EntityId = 1,
-                        EntityType = "Post"
-                    },
-                    new ActivityLogDto
-                    {
-                        Id = 2,
-                        Type = "page_updated",
-                        User = "Admin", 
-                        Message = "Updated page content",
-                        Timestamp = DateTime.UtcNow.AddHours(-5),
-                        EntityId = 2,
-                        EntityType = "Page"
-                    }
-                };
-
-                return Ok(activities);
+                // No activity feed implemented yet; return empty list
+                return Ok(Array.Empty<ActivityLogDto>());
             }
             catch (Exception ex)
             {
@@ -195,15 +98,15 @@ namespace greenl8site.Controllers
         {
             try
             {
-                var random = new Random();
+                // Return minimal neutral system status without mock values
                 var status = new SystemStatus
                 {
                     ServerStatus = "good",
-                    ServerLoad = random.Next(20, 60),
+                    ServerLoad = 0,
                     DatabaseStatus = "good",
-                    StorageUsed = "245MB",
-                    StorageTotal = "1GB",
-                    StoragePercentage = random.Next(20, 40),
+                    StorageUsed = "0MB",
+                    StorageTotal = "0MB",
+                    StoragePercentage = 0,
                     Version = "1.0.0",
                     UpdateAvailable = false
                 };

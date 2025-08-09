@@ -1,11 +1,11 @@
 .post-edit-container {
   height: 100%;
   display: flex;
-  margin-top: 600px;
+  margin-top: 0;
   flex-direction: column;
   background-color: #2c2c2c;
   color: #f0f0f0;
-  padding-top: 40px; /* Add top padding to account for browser UI */
+  padding-top: 0;
   
   /* Toolbar styles */
   .edit-toolbar {
@@ -14,7 +14,7 @@
     padding: 0 16px;
     border-bottom: 1px solid #444;
     position: sticky;
-    top: 1px; /* Offset by the container's top padding */
+    top: 0;
     z-index: 10;
     
     .page-title {
@@ -188,7 +188,7 @@
   /* Edit mode */
   .post-edit-form {
     flex: 1;
-    padding: 120px 20px 20px; /* Increased top padding from 84px to 120px */
+    padding: 20px; /* Standard padding; avoid huge top offset */
     overflow-y: auto;
     
     .edit-grid {

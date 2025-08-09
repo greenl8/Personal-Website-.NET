@@ -15,7 +15,7 @@
           <span>Preview</span>
         </button>
         <button mat-menu-item [disabled]="!isEditing" [routerLink]="['/post', postForm.get('slug').value]" target="_blank">
-          <mat-icon><img src="assets/images/external-link.png" alt="View Post" class="toolbar-img-icon"></mat-icon>
+          <mat-icon><img src="assets/images/visitwebsite1.png" alt="View Post" class="toolbar-img-icon"></mat-icon>
           <span>View Post</span>
         </button>
         <mat-divider></mat-divider>
@@ -349,7 +349,7 @@
                 </div>
                 
                 <div *ngIf="!postForm.get('featuredImage').value" class="no-image">
-                  <mat-icon><img src="assets/images/image-icon.png" alt="No image" class="placeholder-icon"></mat-icon>
+                  <mat-icon><img src="assets/images/image-gallery.png" alt="No image" class="placeholder-icon"></mat-icon>
                   <p>No image selected</p>
                 </div>
                 
