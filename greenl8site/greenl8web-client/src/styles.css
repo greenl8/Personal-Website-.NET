@@ -26,3 +26,13 @@ app-root {
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
 }
+
+/* Ensure main.container does not constrain width for admin pages */
+main.container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    display: block;
+}
