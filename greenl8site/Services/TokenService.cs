@@ -38,7 +38,7 @@ namespace YourProjectName.Services
             }
             var key = new SymmetricSecurityKey(tokenKeyBytes);
                 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             
             var tokenDescriptor = new SecurityTokenDescriptor
             {
