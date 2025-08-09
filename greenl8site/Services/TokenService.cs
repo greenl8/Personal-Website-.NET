@@ -28,8 +28,15 @@ namespace YourProjectName.Services
                 new Claim(ClaimTypes.Role, user.Role)
             };
             
-            var tokenKey = _config["TokenKey"] ?? throw new InvalidOperationException("TokenKey is not configured");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
+            var tokenKey = EnvironmentService.GetResolvedValue(_config, "TokenKey")
+                ?? throw new InvalidOperationException("TokenKey is not configured");
+            var tokenKeyBytes = Encoding.UTF8.GetBytes(tokenKey);
+            if (tokenKeyBytes.Length < 16)
+            {
+                throw new ArgumentOutOfRangeException(nameof(tokenKey),
+                    $"TokenKey must be at least 16 bytes (128 bits) for HMAC-SHA512. Current length: {tokenKeyBytes.Length} bytes. Configure a longer TOKEN_KEY.");
+            }
+            var key = new SymmetricSecurityKey(tokenKeyBytes);
                 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             
