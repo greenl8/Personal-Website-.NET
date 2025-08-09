@@ -83,6 +83,9 @@ namespace YourProjectName
 
                         // Ensure DateTime columns are correctly typed in PostgreSQL (convert from TEXT to timestamptz when needed)
                         await EnsureDateTimeColumnsAreCorrectTypeAsync(context, logger);
+
+                        // Ensure boolean columns (e.g., IsPublished) use proper PostgreSQL boolean type instead of integer/text
+                        await EnsureBooleanColumnsAreCorrectTypeAsync(context, logger);
                     }
                     else
                     {
@@ -401,6 +404,95 @@ END $$;";
             catch (Exception ex)
             {
                 logger.LogWarning(ex, "Failed to coerce DateTime columns to proper PostgreSQL types. Continuing.");
+            }
+        }
+        
+        private static async Task EnsureBooleanColumnsAreCorrectTypeAsync(AppDbContext context, ILogger logger)
+        {
+            try
+            {
+                if (context.Database.IsNpgsql())
+                {
+                    const string fixBooleanColumnsSql = @"DO $$
+BEGIN
+  -- Posts.IsPublished
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'Posts'
+      AND column_name = 'IsPublished'
+      AND data_type IN ('integer','text','smallint')
+  ) THEN
+    -- Normalize nulls to 0 to avoid cast errors
+    EXECUTE 'UPDATE ""Posts"" SET ""IsPublished"" = COALESCE(""IsPublished"", 0)';
+    BEGIN
+      EXECUTE 'ALTER TABLE ""Posts"" ALTER COLUMN ""IsPublished"" DROP DEFAULT';
+    EXCEPTION WHEN others THEN
+      NULL;
+    END;
+    -- Use appropriate conversion depending on underlying type
+    IF EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_schema = current_schema()
+        AND table_name = 'Posts'
+        AND column_name = 'IsPublished'
+        AND data_type IN ('integer','smallint')
+    ) THEN
+      EXECUTE 'ALTER TABLE ""Posts"" ALTER COLUMN ""IsPublished"" TYPE boolean USING (""IsPublished"" <> 0)';
+    ELSIF EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_schema = current_schema()
+        AND table_name = 'Posts'
+        AND column_name = 'IsPublished'
+        AND data_type = 'text'
+    ) THEN
+      EXECUTE 'ALTER TABLE ""Posts"" ALTER COLUMN ""IsPublished"" TYPE boolean USING ((NULLIF(TRIM(""IsPublished""), '''')::integer) <> 0)';
+    END IF;
+    EXECUTE 'ALTER TABLE ""Posts"" ALTER COLUMN ""IsPublished"" SET DEFAULT false';
+  END IF;
+
+  -- Pages.IsPublished
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = current_schema()
+      AND table_name = 'Pages'
+      AND column_name = 'IsPublished'
+      AND data_type IN ('integer','text','smallint')
+  ) THEN
+    EXECUTE 'UPDATE ""Pages"" SET ""IsPublished"" = COALESCE(""IsPublished"", 0)';
+    BEGIN
+      EXECUTE 'ALTER TABLE ""Pages"" ALTER COLUMN ""IsPublished"" DROP DEFAULT';
+    EXCEPTION WHEN others THEN
+      NULL;
+    END;
+    IF EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_schema = current_schema()
+        AND table_name = 'Pages'
+        AND column_name = 'IsPublished'
+        AND data_type IN ('integer','smallint')
+    ) THEN
+      EXECUTE 'ALTER TABLE ""Pages"" ALTER COLUMN ""IsPublished"" TYPE boolean USING (""IsPublished"" <> 0)';
+    ELSIF EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_schema = current_schema()
+        AND table_name = 'Pages'
+        AND column_name = 'IsPublished'
+        AND data_type = 'text'
+    ) THEN
+      EXECUTE 'ALTER TABLE ""Pages"" ALTER COLUMN ""IsPublished"" TYPE boolean USING ((NULLIF(TRIM(""IsPublished""), '''')::integer) <> 0)';
+    END IF;
+    EXECUTE 'ALTER TABLE ""Pages"" ALTER COLUMN ""IsPublished"" SET DEFAULT false';
+  END IF;
+END $$;";
+
+                    await context.Database.ExecuteSqlRawAsync(fixBooleanColumnsSql);
+                    logger.LogInformation("Ensured IsPublished columns use PostgreSQL boolean type");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to coerce boolean columns to PostgreSQL boolean. Continuing.");
             }
         }
         
