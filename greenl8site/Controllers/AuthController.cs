@@ -31,12 +31,12 @@ namespace YourProjectName.Controllers
         {
             if (await _context.Users.AnyAsync(u => EF.Functions.ILike(u.Username, registerDto.Username)))
             {
-                return BadRequest("Username is already taken");
+                return BadRequest(new { error = "Username is already taken" });
             }
             
             if (await _context.Users.AnyAsync(u => EF.Functions.ILike(u.Email, registerDto.Email)))
             {
-                return BadRequest("Email is already taken");
+                return BadRequest(new { error = "Email is already taken" });
             }
             
             var user = new User
@@ -68,7 +68,7 @@ namespace YourProjectName.Controllers
                 
             if (user == null)
             {
-                return Unauthorized("Invalid username");
+                return Unauthorized(new { error = "Invalid credentials" });
             }
             
             var result = _passwordHasher.VerifyHashedPassword(
@@ -76,7 +76,7 @@ namespace YourProjectName.Controllers
                 
             if (result != PasswordVerificationResult.Success)
             {
-                return Unauthorized("Invalid password");
+                return Unauthorized(new { error = "Invalid credentials" });
             }
             
             return new UserDto
@@ -100,7 +100,7 @@ namespace YourProjectName.Controllers
                 
                 if (user == null)
                 {
-                    return Unauthorized("User not found");
+                    return Unauthorized(new { error = "User not found" });
                 }
             
             return new UserDto
