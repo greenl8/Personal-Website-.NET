@@ -27,12 +27,12 @@ app-root {
     min-height: 100dvh; /* Dynamic viewport height for mobile */
 }
 
-/* Ensure main.container does not constrain width for admin pages */
-main.container {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
+/* Shell wrapper with consistent font and no width constraints */
+.app-shell {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    display: block;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }

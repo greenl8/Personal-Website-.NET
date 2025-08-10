@@ -201,11 +201,11 @@
     
     .edit-grid {
       display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-      gap: 20px;
+      grid-template-columns: 2fr 1fr; /* more stable proportions */
+      gap: 24px;
       width: 100%;
-      max-width: 1400px; /* reasonable cap for desktops */
-      margin: 0 auto; /* center the grid within large screens */
+      max-width: 1200px; /* tighter cap for better readability */
+      margin: 0 auto;
       
       @media (max-width: 960px) {
         grid-template-columns: 1fr;
@@ -216,6 +216,16 @@
         flex-direction: column;
         gap: 20px;
         min-width: 0; /* prevent overflow-induced shrinking */
+      }
+      
+      .main-column {
+        /* ensure the writing area uses available width */
+        > mat-card .editor-container app-rich-text-editor,
+        > mat-card .editor-container .quill-editor-container,
+        > mat-card .editor-container .ql-container.ql-snow {
+          width: 100% !important;
+          max-width: none !important;
+        }
       }
       
       mat-card {
