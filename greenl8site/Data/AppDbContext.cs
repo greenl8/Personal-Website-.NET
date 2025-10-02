@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using YourProjectName.Models;
+using greenl8site.Models;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace YourProjectName.Data
+namespace greenl8site.Data
 {
     public class AppDbContext : DbContext
     {

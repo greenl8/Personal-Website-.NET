@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using YourProjectName.Data;
-using YourProjectName.DTOs;
-using YourProjectName.Models;
-using YourProjectName.Services;
+using greenl8site.Data;
+using greenl8site.DTOs;
+using greenl8site.Models;
+using greenl8site.Services;
 
-namespace YourProjectName.Controllers
+namespace greenl8site.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

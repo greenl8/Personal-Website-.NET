@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace YourProjectName.DTOs
+namespace greenl8site.DTOs
 {
     public class TagDto
     {

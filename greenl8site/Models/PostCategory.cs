@@ -1,4 +1,4 @@
-namespace YourProjectName.Models
+namespace greenl8site.Models
 {
     public class PostCategory
     {

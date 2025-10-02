@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 
-namespace YourProjectName.DTOs
+namespace greenl8site.DTOs
 {
     public class MediaDto
     {

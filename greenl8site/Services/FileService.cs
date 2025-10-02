@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
-namespace YourProjectName.Services
+namespace greenl8site.Services
 {
     public class FileService
     {

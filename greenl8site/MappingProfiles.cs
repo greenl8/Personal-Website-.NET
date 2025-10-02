@@ -1,8 +1,8 @@
 using AutoMapper;
-using YourProjectName.DTOs;
-using YourProjectName.Models;
+using greenl8site.DTOs;
+using greenl8site.Models;
 
-namespace YourProjectName
+namespace greenl8site
 {
     public class MappingProfiles : Profile
     {

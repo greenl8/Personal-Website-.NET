@@ -27,8 +27,7 @@ This guide covers deploying your ASP.NET Core application with Angular frontend 
 2. Go to the "Connect" tab
 3. Copy the "Postgres Connection URL" - it will look like:
    ```
-   
-postgresql://postgres:MHJDNikCqhnKtrmczOQZttUlWdzcDdRi@postgres.railway.internal:5432/railway
+   postgresql://USER:PASSWORD@HOST:PORT/DBNAME
    ```
 4. Save this URL for the next step
 
@@ -58,19 +57,18 @@ ASPNETCORE_ENVIRONMENT=Production
 ASPNETCORE_URLS=http://+:8080
 
 # Database (use the Railway PostgreSQL URL from Step 1.2)
-DATABASE_URL=
-postgresql://postgres:MHJDNikCqhnKtrmczOQZttUlWdzcDdRi@switchyard.proxy.rlwy.net:46150/railway
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DBNAME
 
 # JWT Security (generate a secure 32+ character key)
-TOKEN_KEY=#g<*dnSC>wrr2V|Yk3o;VHa!wm'9^Z@M
+TOKEN_KEY=GENERATE_A_SECURE_TOKEN_KEY
 
 # Admin User (customize these values)
-ADMIN_USERNAME=greenl8
-ADMIN_EMAIL=judeasmith4@gmail.com
-ADMIN_PASSWORD=5m1th4445m5!Q
+ADMIN_USERNAME=admin
+ADMIN_EMAIL=admin@yourdomain.com
+ADMIN_PASSWORD=YOUR_STRONG_ADMIN_PASSWORD
 
 # File Storage Base URL (update with your actual Render URL)
-BASE_URL=https://greenl8site.onrender.com
+BASE_URL=https://your-service-name.onrender.com
 ```
 
 #### Generating Secure Values

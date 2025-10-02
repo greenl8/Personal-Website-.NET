@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 
-namespace YourProjectName.Services
+namespace greenl8site.Services
 {
     public class EnvironmentService
     {
@@ -40,7 +40,7 @@ namespace YourProjectName.Services
                 return postgresUrl;
             }
 
-            Console.WriteLine($"Original PostgreSQL URL: {postgresUrl.Substring(0, Math.Min(50, postgresUrl.Length))}...");
+            Console.WriteLine("Original PostgreSQL URL detected (redacted)");
 
             // Check if it's already a proper connection string (contains "Host=" or "Server=")
             if (postgresUrl.Contains("Host=") || postgresUrl.Contains("Server="))
@@ -108,7 +108,7 @@ namespace YourProjectName.Services
         {
             Console.WriteLine($"Getting connection string for: {name}");
             var connectionString = configuration.GetConnectionString(name);
-            Console.WriteLine($"Raw connection string from config: {connectionString}");
+            Console.WriteLine($"Raw connection string from config: {(string.IsNullOrEmpty(connectionString) ? "NULL/EMPTY" : "PRESENT (REDACTED)")}");
             
             var resolved = ResolveEnvironmentVariables(connectionString);
             Console.WriteLine($"After environment variable resolution: {(string.IsNullOrEmpty(resolved) ? "NULL/EMPTY" : "HAS VALUE")}");

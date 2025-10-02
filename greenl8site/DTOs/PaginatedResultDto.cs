@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace YourProjectName.DTOs
+namespace greenl8site.DTOs
 {
     public class PaginatedResultDto<T>
     {

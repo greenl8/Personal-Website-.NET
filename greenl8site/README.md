@@ -45,6 +45,8 @@ A modern personal blog platform built with ASP.NET Core backend and Angular fron
 
 This application is configured for deployment on **Render.com** with **Railway PostgreSQL**.
 
+Important: No secrets are committed to this repository. Configure all sensitive values via environment variables in your hosting provider.
+
 ### Quick Setup
 Run the setup script to generate secure credentials:
 
@@ -94,15 +96,17 @@ greenl8site/
 ## Environment Variables
 
 ### Required for Production
-- `DATABASE_URL` - PostgreSQL connection string
+- `DATABASE_URL` - PostgreSQL connection string (e.g., `postgresql://USER:PASSWORD@HOST:PORT/DBNAME`)
 - `TOKEN_KEY` - JWT signing key (32+ characters)
 - `ADMIN_USERNAME` - Admin user username
 - `ADMIN_EMAIL` - Admin user email
 - `ADMIN_PASSWORD` - Admin user password
-- `BASE_URL` - Application base URL
+- `BASE_URL` - Application base URL (e.g., `https://your-service-name.onrender.com`)
 
 ### Development
 Uses SQLite database with default settings in `appsettings.Development.json`.
+
+Copy `appsettings.example.json` to `appsettings.json` (or set env vars) and fill in values before running in production.
 
 ## Admin Access
 

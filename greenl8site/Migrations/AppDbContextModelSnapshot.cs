@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using YourProjectName.Data;
+using greenl8site.Data;
 
 #nullable disable
 
@@ -18,7 +18,7 @@ namespace greenl8site.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
 
-            modelBuilder.Entity("YourProjectName.Models.Category", b =>
+            modelBuilder.Entity("greenl8site.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,7 +39,7 @@ namespace greenl8site.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.Media", b =>
+            modelBuilder.Entity("greenl8site.Models.Media", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +76,7 @@ namespace greenl8site.Migrations
                     b.ToTable("Media");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.Page", b =>
+            modelBuilder.Entity("greenl8site.Models.Page", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -115,7 +115,7 @@ namespace greenl8site.Migrations
                     b.ToTable("Pages");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.Post", b =>
+            modelBuilder.Entity("greenl8site.Models.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -169,7 +169,7 @@ namespace greenl8site.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.PostCategory", b =>
+            modelBuilder.Entity("greenl8site.Models.PostCategory", b =>
                 {
                     b.Property<int>("PostId")
                         .HasColumnType("INTEGER");
@@ -184,7 +184,7 @@ namespace greenl8site.Migrations
                     b.ToTable("PostCategories");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.PostTag", b =>
+            modelBuilder.Entity("greenl8site.Models.PostTag", b =>
                 {
                     b.Property<int>("PostId")
                         .HasColumnType("INTEGER");
@@ -199,7 +199,7 @@ namespace greenl8site.Migrations
                     b.ToTable("PostTags");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.Tag", b =>
+            modelBuilder.Entity("greenl8site.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -220,7 +220,7 @@ namespace greenl8site.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.User", b =>
+            modelBuilder.Entity("greenl8site.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -253,9 +253,9 @@ namespace greenl8site.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.Media", b =>
+            modelBuilder.Entity("greenl8site.Models.Media", b =>
                 {
-                    b.HasOne("YourProjectName.Models.User", "UploadedBy")
+                    b.HasOne("greenl8site.Models.User", "UploadedBy")
                         .WithMany("UploadedMedia")
                         .HasForeignKey("UploadedById")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -264,9 +264,9 @@ namespace greenl8site.Migrations
                     b.Navigation("UploadedBy");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.Page", b =>
+            modelBuilder.Entity("greenl8site.Models.Page", b =>
                 {
-                    b.HasOne("YourProjectName.Models.User", "Author")
+                    b.HasOne("greenl8site.Models.User", "Author")
                         .WithMany("Pages")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -275,9 +275,9 @@ namespace greenl8site.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.Post", b =>
+            modelBuilder.Entity("greenl8site.Models.Post", b =>
                 {
-                    b.HasOne("YourProjectName.Models.User", "Author")
+                    b.HasOne("greenl8site.Models.User", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -286,15 +286,15 @@ namespace greenl8site.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.PostCategory", b =>
+            modelBuilder.Entity("greenl8site.Models.PostCategory", b =>
                 {
-                    b.HasOne("YourProjectName.Models.Category", "Category")
+                    b.HasOne("greenl8site.Models.Category", "Category")
                         .WithMany("PostCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YourProjectName.Models.Post", "Post")
+                    b.HasOne("greenl8site.Models.Post", "Post")
                         .WithMany("PostCategories")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -305,15 +305,15 @@ namespace greenl8site.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.PostTag", b =>
+            modelBuilder.Entity("greenl8site.Models.PostTag", b =>
                 {
-                    b.HasOne("YourProjectName.Models.Post", "Post")
+                    b.HasOne("greenl8site.Models.Post", "Post")
                         .WithMany("PostTags")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YourProjectName.Models.Tag", "Tag")
+                    b.HasOne("greenl8site.Models.Tag", "Tag")
                         .WithMany("PostTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -324,24 +324,24 @@ namespace greenl8site.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.Category", b =>
+            modelBuilder.Entity("greenl8site.Models.Category", b =>
                 {
                     b.Navigation("PostCategories");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.Post", b =>
+            modelBuilder.Entity("greenl8site.Models.Post", b =>
                 {
                     b.Navigation("PostCategories");
 
                     b.Navigation("PostTags");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.Tag", b =>
+            modelBuilder.Entity("greenl8site.Models.Tag", b =>
                 {
                     b.Navigation("PostTags");
                 });
 
-            modelBuilder.Entity("YourProjectName.Models.User", b =>
+            modelBuilder.Entity("greenl8site.Models.User", b =>
                 {
                     b.Navigation("Pages");
 

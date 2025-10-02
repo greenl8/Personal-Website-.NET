@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace YourProjectName.Services
+namespace greenl8site.Services
 {
     public class SlugService
     {

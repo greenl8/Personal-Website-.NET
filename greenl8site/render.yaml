@@ -14,14 +14,14 @@ services:
       - key: ASPNETCORE_URLS
         value: http://+:8080
       - key: DATABASE_URL
-        value: postgresql://postgres:MHJDNikCqhnKtrmczOQZttUlWdzcDdRi@switchyard.proxy.rlwy.net:46150/railway
+        value: YOUR_RAILWAY_POSTGRESQL_URL_HERE
       - key: TOKEN_KEY
-        value: "#g<*dnSC>wrr2V|Yk3o;VHa!wm'9^Z@M"
+        value: YOUR_SECURE_TOKEN_KEY_HERE
       - key: ADMIN_USERNAME
-        value: greenl8
+        value: admin
       - key: ADMIN_EMAIL
-        value: judeasmith4@gmail.com
+        value: admin@yourdomain.com
       - key: ADMIN_PASSWORD
-        value: "doogan"
+        value: YOUR_ADMIN_PASSWORD_HERE
       - key: BASE_URL
-        value: https://greenl8site.onrender.com 
+        value: https://your-service-name.onrender.com

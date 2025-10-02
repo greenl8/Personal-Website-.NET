@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using greenl8site.DTOs;
-using YourProjectName.Data;
+using greenl8site.Data;
 
 namespace greenl8site.Controllers
 {

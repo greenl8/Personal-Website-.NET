@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace YourProjectName.Models
+namespace greenl8site.Models
 {
     public class Media
     {

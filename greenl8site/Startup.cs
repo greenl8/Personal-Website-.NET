@@ -9,12 +9,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using YourProjectName.Data;
-using YourProjectName.Services;
+using greenl8site.Data;
+using greenl8site.Services;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace YourProjectName
+namespace greenl8site
 {
     public class Startup
     {
@@ -170,7 +170,7 @@ namespace YourProjectName
             // Add Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "YourProjectName API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "greenl8site API", Version = "v1" });
                 
                 // Add JWT Authentication to Swagger
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -205,7 +205,7 @@ namespace YourProjectName
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "YourProjectName API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "greenl8site API v1"));
             }
             
             app.UseRouting();

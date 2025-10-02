@@ -10,12 +10,12 @@ if (-not (Test-Path ".git")) {
 # Generate a secure token key (32 characters)
 Write-Host "🔑 Generating secure TOKEN_KEY..." -ForegroundColor Yellow
 $TokenKey = -join ((65..90) + (97..122) + (48..57) | Get-Random -Count 32 | ForEach-Object {[char]$_})
-Write-Host "Generated TOKEN_KEY: $TokenKey" -ForegroundColor Cyan
+Write-Host "Generated TOKEN_KEY: (redacted)" -ForegroundColor Cyan
 
 # Generate a secure admin password (16 characters)
 Write-Host "🔐 Generating secure admin password..." -ForegroundColor Yellow
 $AdminPassword = -join ((65..90) + (97..122) + (48..57) + (33,35,36,37,38,42,43,45,61,63,64) | Get-Random -Count 16 | ForEach-Object {[char]$_})
-Write-Host "Generated ADMIN_PASSWORD: $AdminPassword" -ForegroundColor Cyan
+Write-Host "Generated ADMIN_PASSWORD: (redacted)" -ForegroundColor Cyan
 
 Write-Host ""
 Write-Host "📝 Environment Variables for Render.com:" -ForegroundColor Magenta
@@ -23,10 +23,10 @@ Write-Host "=========================================" -ForegroundColor Magenta
 Write-Host "ASPNETCORE_ENVIRONMENT=Production"
 Write-Host "ASPNETCORE_URLS=http://+:8080"
 Write-Host "DATABASE_URL=YOUR_RAILWAY_POSTGRESQL_URL_HERE"
-Write-Host "TOKEN_KEY=$TokenKey"
+Write-Host "TOKEN_KEY=(redacted)"
 Write-Host "ADMIN_USERNAME=admin"
 Write-Host "ADMIN_EMAIL=admin@yourdomain.com"
-Write-Host "ADMIN_PASSWORD=$AdminPassword"
+Write-Host "ADMIN_PASSWORD=(redacted)"
 Write-Host "BASE_URL=https://your-service-name.onrender.com"
 Write-Host ""
 
@@ -49,10 +49,10 @@ $envVars = @"
 ASPNETCORE_ENVIRONMENT=Production
 ASPNETCORE_URLS=http://+:8080
 DATABASE_URL=YOUR_RAILWAY_POSTGRESQL_URL_HERE
-TOKEN_KEY=$TokenKey
+TOKEN_KEY=REPLACE_WITH_SECURE_TOKEN
 ADMIN_USERNAME=admin
 ADMIN_EMAIL=admin@yourdomain.com
-ADMIN_PASSWORD=$AdminPassword
+ADMIN_PASSWORD=REPLACE_WITH_SECURE_PASSWORD
 BASE_URL=https://your-service-name.onrender.com
 "@
 

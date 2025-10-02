@@ -1,0 +1,38 @@
+# Build artifacts
+bin/
+obj/
+greenl8web-client/dist/
+wwwroot/*.js.map
+wwwroot/*.css.map
+
+# User-specific files
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Environment and secrets
+*.env
+deployment-env-vars.txt
+appsettings.Local.json
+appsettings.Development.local.json
+.env.local
+.env.*.local
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Uploads (optional - uncomment to ignore uploaded files)
+wwwroot/uploads/
+
+# Node modules
+greenl8web-client/node_modules/
+
+# Angular build outputs
+greenl8web-client/dist/
+wwwroot/*.js.map
+wwwroot/*.css.map
+

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using YourProjectName.Data;
+using greenl8site.Data;
 
 #nullable disable
 

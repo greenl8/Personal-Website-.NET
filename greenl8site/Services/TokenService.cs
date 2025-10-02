@@ -5,9 +5,9 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using YourProjectName.Models;
+using greenl8site.Models;
 
-namespace YourProjectName.Services
+namespace greenl8site.Services
 {
     public class TokenService
     {

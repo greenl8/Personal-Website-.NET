@@ -7,14 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
-using YourProjectName.Data;
-using YourProjectName.Models;
-using YourProjectName.Services;
+using greenl8site.Data;
+using greenl8site.Models;
+using greenl8site.Services;
 using System.Collections.Generic; // Added for List<PostCategory> and List<PostTag>
 using System.Linq; // Added for AnyAsync and FirstOrDefaultAsync
 using Npgsql; // Added for Npgsql.PostgresException
 
-namespace YourProjectName
+namespace greenl8site
 {
     public class Program
     {
@@ -131,15 +131,20 @@ namespace YourProjectName
                 
         private static async Task SeedData(AppDbContext context, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            // Always seed an admin user if no users exist (works in all environments)
+            // Seed an admin user if no users exist (requires configured credentials; no insecure defaults)
             if (!await context.Users.AnyAsync())
             {
                 var passwordHasher = new PasswordHasher<User>();
                 
                 // Get admin credentials from configuration with environment variable resolution
-                var adminUsername = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Username") ?? "admin";
-                var adminEmail = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Email") ?? "admin@example.com";
-                var adminPassword = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Password") ?? "Admin123!";
+                var adminUsername = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Username");
+                var adminEmail = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Email");
+                var adminPassword = EnvironmentService.GetResolvedValue(configuration, "AdminUser:Password");
+
+                if (string.IsNullOrWhiteSpace(adminUsername) || string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
+                {
+                    throw new InvalidOperationException("Admin credentials are not configured. Set ADMIN_USERNAME, ADMIN_EMAIL, ADMIN_PASSWORD.");
+                }
                 
                 var adminUser = new User
                 {
